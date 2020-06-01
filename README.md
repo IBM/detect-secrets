@@ -1,4 +1,4 @@
-# Whitewater Detect Secrets
+# Detect Secrets
 
 ## About
 
