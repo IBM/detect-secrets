@@ -1,3 +1,4 @@
+import base64
 import re
 from abc import ABCMeta
 from abc import abstractmethod
@@ -129,6 +130,7 @@ class BasePlugin:
         potential_secrets = {}
         file_lines = tuple(file.readlines())
         for line_num, line in enumerate(file_lines, start=1):
+            # TODO Put the file pre-processor here?
             results = self.analyze_line(line, line_num, filename, output_raw)
             if (
                 not results
@@ -179,12 +181,41 @@ class BasePlugin:
         :returns:         dictionary
         NOTE: line_num and filename are used for PotentialSecret creation only.
         """
-        return self.analyze_string_content(
+        # First, look for a result in the raw input string.
+        result = self.analyze_string_content(
             string,
             line_num,
             filename,
             output_raw,
         )
+
+        # If there was no result in the raw, look for encoded values.
+        # TODO Move this to a plugin system, to support multiple decoders.
+        if not result and filename.endswith('.npmrc'):
+            # Attempt to decode the line, if it's _auth or _password
+            pattern = r'(?P<key>_auth|_password) ?= ?(?P<encoded>[a-z0-9+/]+=*)'
+            match = re.search(pattern, string, flags=re.IGNORECASE)
+            if not match:
+                return
+            try:
+                encoded = match.group('encoded')
+                decoded = base64.b64decode(encoded).decode('utf-8')
+                start = match.start('encoded')
+                end = match.end('encoded')
+                processed_string = string[:start] + decoded + string[end:]
+            except Exception:
+                return
+
+            # Generate a new string, using the decoded value, and analyze it.
+            result = self.analyze_string_content(
+                processed_string,
+                line_num,
+                filename,
+                output_raw,
+            )
+
+        # Return the result, if any.
+        return result
 
     @abstractmethod
     def analyze_string_content(self, string, line_num, filename, output_raw=False):
