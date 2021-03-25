@@ -130,13 +130,13 @@ class BasePlugin:
         potential_secrets = {}
         file_lines = tuple(file.readlines())
         for line_num, line in enumerate(file_lines, start=1):
-            results = self.analyze_line(line, line_num, filename, output_raw)
-            if (
-                not results
-                or
-                self._is_excluded_line(line)
-            ):
+            if self._is_excluded_line(line):
                 continue
+
+            results = self.analyze_line(line, line_num, filename, output_raw)
+            if not results:
+                continue
+
             if not self.should_verify:
                 potential_secrets.update(results)
                 continue
