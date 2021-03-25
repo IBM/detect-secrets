@@ -130,7 +130,6 @@ class BasePlugin:
         potential_secrets = {}
         file_lines = tuple(file.readlines())
         for line_num, line in enumerate(file_lines, start=1):
-            # TODO Put the file pre-processor here?
             results = self.analyze_line(line, line_num, filename, output_raw)
             if (
                 not results
