@@ -7,7 +7,7 @@
 #  to generate a report and emit an exit code (1 = fail, 0 = pass) on selected conditions based on the specified fail-on flags.
 #
 #  Note:  We include a SKIP_SCAN flag if one desired to skip the scan --update part (step 1 above) and just to the audit -report with existing baseline
-#         This option might be chosen in the case that they alrady have an updated baseline from you the Detect Secrets CLI dev tool.
+#         This option might be chosen in the case that the user has already updated their baseline file locally
 #
 #  This script take is paramenter via Environment Variables:
 #    BASELINE :  This is the filename to use to store/read the scan baseline output/input.
