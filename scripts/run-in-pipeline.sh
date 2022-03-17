@@ -11,7 +11,7 @@
 #
 #  This script takes the following parameters via Environment Variables:
 #    BASELINE :  This is the filename to use to store/read the scan baseline output/input.
-#      * Default:  .secrests.baseline
+#      * Default:  .secrets.baseline
 #
 #    SKIP_SCAN : (True/False) Allows for the skipping of the Scan --update part that updates the baseline file.
 #      * Default:  False
