@@ -190,5 +190,5 @@ else
     echo "[Ending Detect Secrets - run failed ]"
 fi
 
-# Output detect-secrets return code
+# Exit, emitting the detect-secrets return code
 exit $return_code
