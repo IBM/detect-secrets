@@ -1,16 +1,16 @@
 #!/bin/sh
-## 
+##
 #  This script gets packaged with a Redhat python UBI (Universal Base Image) and serves as the entrypoint of the container.
 #  The IBM Detect Secrets CLI tools is also packaged in the container; this scripts will run:
-#      1) Detect Secrets scan --update 
+#      1) Detect Secrets scan --update
 #      2) followed by:  Detect Secrets audit -report with specified fail-on-xx fails
 #  to generate a report and optionally return a failing return code on selected conditions base on the specified fail-on-xx flags.
 #
-#  Note:  We include a SKIP_SCAN flag if one desired to skip the scan --update part (step 1 above) and just to the audit -report with existing baseline 
-#         This option might be chosen in the case that they alrady have an updated baseline from you the Detect Secrets CLI dev tool.    
+#  Note:  We include a SKIP_SCAN flag if one desired to skip the scan --update part (step 1 above) and just to the audit -report with existing baseline
+#         This option might be chosen in the case that they alrady have an updated baseline from you the Detect Secrets CLI dev tool.
 #
 #  This script take is paramenter via Environment Variables:
-#    BASELINE :  This is the filename to use to store/read the scan baseline output/input.  
+#    BASELINE :  This is the filename to use to store/read the scan baseline output/input.
 #      * Default:  .secrests.baseline
 #
 #    SKIP_SCAN : (True/False) Allows for the skipping of the Scan --update part that updates the baseline file.
@@ -21,7 +21,7 @@
 #        Note:  Setting True is mutually exclusive with setting OMIT_INSTRUCTIONS=True.
 #
 #    OMIT_INSTRUCTIONS : (True/False) Whether to output resolution instruction for failed conditions.
-#      * Default:  False 
+#      * Default:  False
 #        Note:  Setting True is mutually exclusive with setting JSON=True.
 #
 #    FAIL_ON_LIVE : (True/False) Sets the condition to fail audit if there are verified live secrets found
@@ -33,8 +33,8 @@
 #    FAIL_ON_AUDITED_REAL : (True/False) Sets the condition to fail audit if there are audited and set to real secrets found
 #      * Default:  True
 #
-# Example manual docker run within pacakaged container (git-defenders/detect-secrets-rhubi):  
-#    docker run  --env BASELINE=.secrets.baseline  --env FAIL_ON_LIVE=False  -it -a stdout --rm -v $(pwd):/code git-defenders/detect-secrets-rhubi 
+# Example manual docker run within pacakaged container (git-defenders/detect-secrets-rhubi):
+#    docker run  --env BASELINE=.secrets.baseline  --env FAIL_ON_LIVE=False  -it -a stdout --rm -v $(pwd):/code git-defenders/detect-secrets-rhubi
 ##
 
 ## Constants for FAIL_ON_xx Environment Varibles
@@ -50,23 +50,23 @@ _fail_live_default=$_true
 _fail_unaudited_default=$_true
 _fail_audited_real_default=$_true
 
-## Constants representing Detect Secrets audit -reports --fail-on-xx paramenter options 
+## Constants representing Detect Secrets audit -reports --fail-on-xx paramenter options
 _fail_live_option="--fail-on-live"
 _fail_unaudited_option="--fail-on-unaudited"
 _fail_audited_real_option="--fail-on-audited-real"
 _omit_instructions_option="--omit-instructions"
 _json_option="--json"
 
-## Reading input Environment Variables while setting defaults for missing Environment Variables  
+## Reading input Environment Variables while setting defaults for missing Environment Variables
 baseline=${BASELINE:=.$_baseline_default}
 json=${JSON:=${_json_default}}
 omit_instructions=${OMIT_INSTRUCTIONS:=$_omit_instructions_default}
 skip_scan=${SKIP_SCAN:=$_skip_scan_default}
 fail_live=${FAIL_ON_LIVE:=$_fail_live_default}
 fail_unaudited=${FAIL_ON_UNAUDITED:=$_fail_unaudited_default}
-fail_audited_real=${FAIL_ON_AUDITED_REAL:=$_fail_audited_real_default}  
+fail_audited_real=${FAIL_ON_AUDITED_REAL:=$_fail_audited_real_default}
 
-## 
+##
 # Declare normalize() function to normalize the user inputted for Boolean vales to etiher true or false
 #   - This function allows the user input to be case-insensitive (ie TRUE, true, True, TrUe are all = true)
 #   - This function will return the default value for input if input represents any value other than true or false
@@ -75,7 +75,7 @@ fail_audited_real=${FAIL_ON_AUDITED_REAL:=$_fail_audited_real_default}
 #   Inputs:
 #     - raw user input value for skip_scan or fail-on-xx parameter
 #     - default value for that same parameter
-#   Output:  
+#   Output:
 #      - case-insentive value (true/false) or default value
 ##
 function normalize {
@@ -85,8 +85,8 @@ function normalize {
     if [[ "${user_param,,}" == "$_true" ]]  # Note:  ${var,,} means to lowercase of var
     then
         result="$_true"
-    elif [[ "${user_param,,}" == "$_false" ]] 
-    then  
+    elif [[ "${user_param,,}" == "$_false" ]]
+    then
         result="$_false"
     else
         result="$default_val"
@@ -174,7 +174,7 @@ if [[ "$skip_scan" == "$_false" ]]
 then
   echo "Scanning code directory (docker volume mounted to $PWD) with baseline update ... "
   detect-secrets scan --update $BASELINE
-fi  
+fi
 
 ## Calling Detect Secrets aduit --report against baseline with user specified fail-on-xx otpions
 echo "Auditing and Reporting: Baseline $BASELINE - Options:$audit_report_parms"
