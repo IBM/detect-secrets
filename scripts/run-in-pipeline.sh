@@ -76,7 +76,7 @@ fail_audited_real=${FAIL_ON_AUDITED_REAL:=$_fail_audited_real_default}
 #     - raw user input value for skip_scan or fail-on-xx parameter
 #     - default value for that same parameter
 #   Output:
-#      - case-insentive value (true/false) or default value
+#     - case-insentive value (true/false) or default value
 ##
 function normalize {
     local user_param=$1
@@ -96,17 +96,17 @@ function normalize {
 }
 
 ## Initialize Detect Secrets audit_report parameter string
-audit_report_parms=' '
+audit_report_params=' '
 
 ##
 # Starting the pipeline Detect Secrets run
 ##
-echo "[Starting Detect Secrets run]"
+echo "[ Starting Detect Secrets run ]"
 echo "...using Baseline: $BASELINE"
 
 ##
 # Checking Env Vars and appending coresponding Detect Secrets audit report parameters to the parameter string
-# Note:  Env Var inout values are normalized before checked ... thus case-insensitive and/or defaulted if necessary
+# Note:  Env Var input values are normalized before being checked. Thus case-insensitive and/or defaulted if necessary
 #        Thus the values will allows be either true or false after they are normalized
 ##
 
@@ -124,7 +124,7 @@ json="$(normalize $json $_json_default)"
 if [[ "$json" == "$_true" ]]
 then
   echo "...output json: $_true"
-  audit_report_parms="$audit_report_parms $_json_option"
+  audit_report_params="$audit_report_params $_json_option"
 else
   echo "...output json: $_false"
 fi
@@ -134,7 +134,7 @@ omit_instructions="$(normalize $omit_instructions $_omit_instructions_default)"
 if [[ "$omit_instructions" == "$_true" ]]
 then
   echo "...omit instructions: $_true"
-  audit_report_parms="$audit_report_parms $_omit_instructions_option"
+  audit_report_params="$audit_report_params $_omit_instructions_option"
 else
   echo "...omit instructions: $_false"
 fi
@@ -145,7 +145,7 @@ fail_live="$(normalize $fail_live $_fail_live_default)"
 if [[ "$fail_live" == "$_true" ]]
 then
   echo "...fail on live: $_true"
-  audit_report_parms="$audit_report_parms $_fail_live_option"
+  audit_report_params="$audit_report_params $_fail_live_option"
 else
   echo "...fail on live: $_false"
 fi
@@ -155,7 +155,7 @@ fail_unaudited="$(normalize $fail_unaudited $_fail_unaudited_default)"
 if [[ "$fail_unaudited" == "$_true" ]]
 then
   echo "...fail on unaudited: $_true"
-  audit_report_parms="$audit_report_parms $_fail_unaudited_option"
+  audit_report_params="$audit_report_params $_fail_unaudited_option"
 else
   echo "...fail on unaudited: $_false"
 fi
@@ -164,7 +164,7 @@ fail_audited_real="$(normalize $fail_audited_real $_fail_audited_real_default)"
 if [[ "$fail_audited_real" == "$_true" ]]
 then
   echo "...fail on audited real: $_true"
-  audit_report_parms="$audit_report_parms $_fail_audited_real_option"
+  audit_report_params="$audit_report_params $_fail_audited_real_option"
 else
   echo "...fail on audited real: $_false"
 fi
@@ -177,13 +177,13 @@ then
 fi
 
 ## Calling Detect Secrets aduit --report against baseline with user specified fail-on options
-echo "Auditing and Reporting: Baseline $BASELINE - Options:$audit_report_parms"
-detect-secrets audit --report $audit_report_parms $BASELINE
+echo "Auditing and Reporting: Baseline $BASELINE - Options:$audit_report_params"
+detect-secrets audit --report $audit_report_params $BASELINE
 # Save detect-secrets return code
-return_code=$?
+exit_code=$?
 
 ## Ending the pipeline Detect Secrets run
-if [[ $return_code == 0 ]]
+if [[ $exit_code == 0 ]]
 then
     echo "[ Ending Detect Secrets - run succeeded ]"
 else
@@ -191,4 +191,4 @@ else
 fi
 
 # Exit, emitting the detect-secrets return code
-exit $return_code
+exit $exit_code
