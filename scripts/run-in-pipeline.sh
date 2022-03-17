@@ -67,10 +67,10 @@ fail_unaudited=${FAIL_ON_UNAUDITED:=$_fail_unaudited_default}
 fail_audited_real=${FAIL_ON_AUDITED_REAL:=$_fail_audited_real_default}
 
 ##
-# Declare normalize() function to normalize the user inputted for Boolean vales to etiher true or false
+# Declare normalize function for normalizing the user input for Boolean vales to either true or false
 #   - This function allows the user input to be case-insensitive (ie TRUE, true, True, TrUe are all = true)
 #   - This function will return the default value for input if input represents any value other than true or false
-#     Note:  defaulting for missing Env Var input is handle preivous to this function.
+#     Note:  defaulting for missing Env Var input is handled before this function gets called
 #
 #   Inputs:
 #     - raw user input value for skip_scan or fail-on-xx parameter
