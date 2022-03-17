@@ -1,4 +1,4 @@
-FROM git-defenders/python-rhubi
+FROM git-defenders/python-ubi
 
 COPY README.md /code/
 COPY setup.py /code/

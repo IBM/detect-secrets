@@ -1,4 +1,4 @@
-FROM git-defenders/cli-rhubi
+FROM git-defenders/cli-ubi
 
 # Ensure no trivy violation for pip
 RUN pip install --upgrade pip
