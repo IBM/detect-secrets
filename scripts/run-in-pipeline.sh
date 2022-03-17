@@ -9,7 +9,7 @@
 #  Note:  We include a SKIP_SCAN flag if one desired to skip the scan --update part (step 1 above) and just to the audit -report with existing baseline
 #         This option might be chosen in the case that the user has already updated their baseline file locally
 #
-#  This script take is paramenter via Environment Variables:
+#  This script takes the following parameters via Environment Variables:
 #    BASELINE :  This is the filename to use to store/read the scan baseline output/input.
 #      * Default:  .secrests.baseline
 #
