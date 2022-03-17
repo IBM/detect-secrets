@@ -171,6 +171,16 @@ fi
 ## Calling Detect Secrets aduit --report against baseline with user specified fail-on-xx otpions
 echo "Auditing and Reporting: Baseline $BASELINE - Options:$audit_report_parms"
 detect-secrets audit --report $audit_report_parms $BASELINE
+# Save detect-secrets return code
+return_code=$?
 
 ## Ending the pipeline Detect Secrets run
-echo "[Ending Detect Secrets run]"
+if [[ $return_code == 0 ]]
+then
+    echo "[Ending Detect Secrets - run succeeded ]"
+else
+    echo "[Ending Detect Secrets - run failed ]"
+fi
+
+# Output detect-secrets return code
+exit $return_code
