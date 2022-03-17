@@ -176,7 +176,7 @@ then
   detect-secrets scan --update $BASELINE
 fi
 
-## Calling Detect Secrets aduit --report against baseline with user specified fail-on-xx otpions
+## Calling Detect Secrets aduit --report against baseline with user specified fail-on options
 echo "Auditing and Reporting: Baseline $BASELINE - Options:$audit_report_parms"
 detect-secrets audit --report $audit_report_parms $BASELINE
 # Save detect-secrets return code
