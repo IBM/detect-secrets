@@ -16,6 +16,14 @@
 #    SKIP_SCAN : (True/False) Allows for the skipping of the Scan --update part that updates the baseline file.
 #      * Default:  False
 #
+#    JSON : (True/False) Whether to output result in JSON format vs the Table format
+#      * Default:  False
+#        Note:  Setting True is mutually exclusive with setting OMIT_INSTRUCTIONS=True.
+#
+#    OMIT_INSTRUCTIONS : (True/False) Whether to output resolution instruction for failed conditions.
+#      * Default:  False 
+#        Note:  Setting True is mutually exclusive with setting JSON=True.
+#
 #    FAIL_ON_LIVE : (True/False) Sets the condition to fail audit if there are verified live secrets found
 #      * Default:  True
 #
@@ -36,11 +44,11 @@ _true="true"
 ## Setting Baseline filename, skip_scan, and fail-on-xx Boolean Defaults
 _baseline_default=.secrests.baseline
 _skip_scan_default=$_false
+_json_default=$_false
+_omit_instructions_default=$_false
 _fail_live_default=$_true
 _fail_unaudited_default=$_true
 _fail_audited_real_default=$_true
-_json_default=$_false
-_omit_instructions_default=$_false
 
 ## Constants representing Detect Secrets audit -reports --fail-on-xx paramenter options 
 _fail_live_option="--fail-on-live"
