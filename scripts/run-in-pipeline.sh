@@ -2,9 +2,9 @@
 ##
 #  This script gets packaged with a Redhat python UBI (Universal Base Image) and serves as the entrypoint of the container.
 #  The IBM Detect Secrets CLI tool is also packaged in the container; these scripts will run:
-#      1) Detect Secrets scan --update
-#      2) followed by:  Detect Secrets audit -report with specified fail-on-xx fails
-#  to generate a report and optionally return a failing return code on selected conditions base on the specified fail-on-xx flags.
+#      1) detect-secrets scan --update
+#      2) followed by:  detect-secrets audit --report with fail-on options
+#  to generate a report and emit an exit code (1 = fail, 0 = pass) on selected conditions based on the specified fail-on flags.
 #
 #  Note:  We include a SKIP_SCAN flag if one desired to skip the scan --update part (step 1 above) and just to the audit -report with existing baseline
 #         This option might be chosen in the case that they alrady have an updated baseline from you the Detect Secrets CLI dev tool.
