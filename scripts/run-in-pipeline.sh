@@ -20,7 +20,7 @@
 #      * Default:  False
 #        Note:  Setting True is mutually exclusive with setting OMIT_INSTRUCTIONS=True.
 #
-#    OMIT_INSTRUCTIONS : (True/False) Whether to output resolution instruction for failed conditions.
+#    OMIT_INSTRUCTIONS : (True/False) Whether to output resolution instructions for failed conditions.
 #      * Default:  False
 #        Note:  Setting True is mutually exclusive with setting JSON=True.
 #
