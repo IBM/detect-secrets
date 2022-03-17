@@ -185,9 +185,9 @@ return_code=$?
 ## Ending the pipeline Detect Secrets run
 if [[ $return_code == 0 ]]
 then
-    echo "[Ending Detect Secrets - run succeeded ]"
+    echo "[ Ending Detect Secrets - run succeeded ]"
 else
-    echo "[Ending Detect Secrets - run failed ]"
+    echo "[ Ending Detect Secrets - run failed ]"
 fi
 
 # Exit, emitting the detect-secrets return code
