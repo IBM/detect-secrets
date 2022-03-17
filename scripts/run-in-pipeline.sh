@@ -33,7 +33,7 @@
 #    FAIL_ON_AUDITED_REAL : (True/False) Sets the condition to fail audit if there are audited and set to real secrets found
 #      * Default:  True
 #
-# Example manual docker run within pacakaged container (git-defenders/detect-secrets-rhubi):
+# Example manual docker run within packaged container (git-defenders/detect-secrets-rhubi):
 #    docker run  --env BASELINE=.secrets.baseline  --env FAIL_ON_LIVE=False  -it -a stdout --rm -v $(pwd):/code git-defenders/detect-secrets-rhubi
 ##
 
