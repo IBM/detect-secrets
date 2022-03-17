@@ -1,7 +1,7 @@
 #!/bin/sh
 ##
 #  This script gets packaged with a Redhat python UBI (Universal Base Image) and serves as the entrypoint of the container.
-#  The IBM Detect Secrets CLI tools is also packaged in the container; this scripts will run:
+#  The IBM Detect Secrets CLI tool is also packaged in the container; these scripts will run:
 #      1) Detect Secrets scan --update
 #      2) followed by:  Detect Secrets audit -report with specified fail-on-xx fails
 #  to generate a report and optionally return a failing return code on selected conditions base on the specified fail-on-xx flags.
