@@ -174,7 +174,7 @@ fi
 if [[ "$skip_scan" == "$_false" ]]
 then
   echo
-  echo "Scanning code directory (docker volume mounted to $PWD) with baseline update ... "
+  echo "Scanning code directory (docker volume mounted to $PWD) and updating baseline file $baseline ... "
   echo
   detect-secrets scan --update $baseline
 fi
