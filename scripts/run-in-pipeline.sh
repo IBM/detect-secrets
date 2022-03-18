@@ -58,7 +58,7 @@ _omit_instructions_option="--omit-instructions"
 _json_option="--json"
 
 ## Reading input Environment Variables while setting defaults for missing Environment Variables
-baseline=${BASELINE:=.$_baseline_default}
+baseline=${BASELINE:=$_baseline_default}
 json=${JSON:=${_json_default}}
 omit_instructions=${OMIT_INSTRUCTIONS:=$_omit_instructions_default}
 skip_scan=${SKIP_SCAN:=$_skip_scan_default}
@@ -103,7 +103,7 @@ audit_report_params=' '
 ##
 echo "[ Starting Detect Secrets run ]"
 echo
-echo "...using Baseline: $BASELINE"
+echo "...using Baseline: $baseline"
 
 ##
 # Checking Env Vars and appending coresponding Detect Secrets audit report parameters to the parameter string
@@ -173,13 +173,16 @@ fi
 ## Calling Detect Secrets scan with baseline update to create or update existing baseline file
 if [[ "$skip_scan" == "$_false" ]]
 then
+  echo
   echo "Scanning code directory (docker volume mounted to $PWD) with baseline update ... "
-  detect-secrets scan --update $BASELINE
+  echo
+  detect-secrets scan --update $baseline
 fi
 
 ## Calling Detect Secrets audit --report against baseline with user specified fail-on options
-echo "Running report: Baseline $BASELINE - Options:$audit_report_params"
-detect-secrets audit --report $audit_report_params $BASELINE
+echo "Running report: Baseline $baseline - Options:$audit_report_params"
+echo
+detect-secrets audit --report $audit_report_params $baseline
 # Save detect-secrets return code
 exit_code=$?
 
