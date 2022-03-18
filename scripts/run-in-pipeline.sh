@@ -107,7 +107,7 @@ echo "...using Baseline: $BASELINE"
 ##
 # Checking Env Vars and appending coresponding Detect Secrets audit report parameters to the parameter string
 # Note:  Env Var input values are normalized before being checked. Thus case-insensitive and/or defaulted if necessary
-#        Thus the values will allows be either true or false after they are normalized
+#        Thus the values will always be either true or false after they are normalized
 ##
 
 # skip_scan parameter
