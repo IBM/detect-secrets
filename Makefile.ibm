@@ -64,7 +64,7 @@ docker-test-images:
 	docker run -it $(DOCKER_DOMAIN_LOCAL)/detect-secrets-hook --version
 
 docker-build-images:
-	for dockerfile in Dockerfiles/*.Dockerfile; do                                   \
+	for dockerfile in Dockerfiles/*/*.Dockerfile; do                                   \
 		image_name=$$(echo -e $$(basename $${dockerfile}) | cut -d\. -f2);           \
 		docker build -f "$${dockerfile}" -t $(DOCKER_DOMAIN_LOCAL)/$${image_name} .; \
 	done
