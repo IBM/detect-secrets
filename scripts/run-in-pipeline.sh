@@ -177,7 +177,7 @@ then
   echo "Scanning code directory (docker volume mounted to $PWD) and updating baseline file $baseline ... "
   detect-secrets scan --update $baseline
 fi
- 
+
 echo
 
 ## Calling Detect Secrets audit --report against baseline with user specified fail-on options
