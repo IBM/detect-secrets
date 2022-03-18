@@ -42,7 +42,7 @@ _false="false"
 _true="true"
 
 ## Setting Baseline filename, skip_scan, and fail-on-xx Boolean Defaults
-_baseline_default=.secrests.baseline
+_baseline_default=.secrets.baseline
 _skip_scan_default=$_false
 _json_default=$_false
 _omit_instructions_default=$_false
