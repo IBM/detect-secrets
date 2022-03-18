@@ -102,6 +102,7 @@ audit_report_params=' '
 # Starting the pipeline Detect Secrets run
 ##
 echo "[ Starting Detect Secrets run ]"
+echo
 echo "...using Baseline: $BASELINE"
 
 ##
