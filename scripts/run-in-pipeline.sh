@@ -177,7 +177,7 @@ then
 fi
 
 ## Calling Detect Secrets audit --report against baseline with user specified fail-on options
-echo "Auditing and Reporting: Baseline $BASELINE - Options:$audit_report_params"
+echo "Running report: Baseline $BASELINE - Options:$audit_report_params"
 detect-secrets audit --report $audit_report_params $BASELINE
 # Save detect-secrets return code
 exit_code=$?
