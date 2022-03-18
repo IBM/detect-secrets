@@ -175,9 +175,10 @@ if [[ "$skip_scan" == "$_false" ]]
 then
   echo
   echo "Scanning code directory (docker volume mounted to $PWD) and updating baseline file $baseline ... "
-  echo
   detect-secrets scan --update $baseline
 fi
+ 
+echo
 
 ## Calling Detect Secrets audit --report against baseline with user specified fail-on options
 echo "Running report: Baseline $baseline - Options:$audit_report_params"
