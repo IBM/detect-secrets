@@ -103,7 +103,7 @@ audit_report_params=' '
 ##
 echo "[ Starting Detect Secrets run ]"
 echo
-echo "...using Baseline: $baseline"
+echo "...using baseline: $baseline"
 
 ##
 # Checking Env Vars and appending coresponding Detect Secrets audit report parameters to the parameter string
