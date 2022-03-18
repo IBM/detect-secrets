@@ -183,6 +183,8 @@ detect-secrets audit --report $audit_report_params $BASELINE
 # Save detect-secrets return code
 exit_code=$?
 
+echo
+
 ## Ending the pipeline Detect Secrets run
 if [[ $exit_code == 0 ]]
 then
