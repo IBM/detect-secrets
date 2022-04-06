@@ -3,35 +3,36 @@
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
-- [What Is It?](#what-is-it)
-- [How to Audit a Baseline](#how-to-audit-a-baseline)
-  - [Windows Powershell and cmd](#windows-powershell-and-cmd)
-  - [Windows git bash](#windows-git-bash)
-  - [MacOS & Linux](#macos--linux)
-- [Manually Labelling Secrets](#manually-labelling-secrets)
-  - [Handling Developer Secrets](#handling-developer-secrets)
-- [What to do after marking an potential secret as a valid secret?](#what-to-do-after-marking-an-potential-secret-as-a-valid-secret)
-- [Comparing Baselines](#comparing-baselines)
-- [Report Generation](#report-generation)
-  - [Running in CI / CD](#running-in-ci--cd)
-    - [Using the `detect-secrets:redhat-ubi` and `detect-secrets:latest` Docker Images](#using-the-detect-secretsredhat-ubi-and-detect-secretslatest-docker-images)
-    - [Using the `detect-secrets:redhat-ubi-custom` Docker Image](#using-the-detect-secretsredhat-ubi-custom-docker-image)
-    - [Installing via pip](#installing-via-pip)
-      - [Travis](#travis)
-      - [Other pipelines](#other-pipelines)
-  - [Output](#output)
-  - [Usage](#usage)
-    - [Instructions](#instructions)
-    - [Examples:](#examples)
-      - [Case: No --fail-on arguments provided](#case-no---fail-on-arguments-provided)
-      - [Case: No --fail-on arguments provided, instructions omitted](#case-no---fail-on-arguments-provided-instructions-omitted)
-      - [Case: All --fail-on arguments provided](#case-all---fail-on-arguments-provided)
-      - [Case: All --fail-on arguments provided, instructions omitted](#case-all---fail-on-arguments-provided-instructions-omitted)
-      - [Case: One --fail-on argument provided](#case-one---fail-on-argument-provided)
-      - [Case: One --fail-on argument provided, instructions omitted](#case-one---fail-on-argument-provided-instructions-omitted)
-      - [Case: No --fail-on arguments provided, json](#case-no---fail-on-arguments-provided-json)
-      - [Case: All --fail-on arguments provided, json](#case-all---fail-on-arguments-provided-json)
-      - [Case: One --fail-on argument provided, json](#case-one---fail-on-argument-provided-json)
+-   [What Is It?](#what-is-it)
+-   [How to Audit a Baseline](#how-to-audit-a-baseline)
+    -   [Windows Powershell and cmd](#windows-powershell-and-cmd)
+    -   [Windows git bash](#windows-git-bash)
+    -   [MacOS & Linux](#macos--linux)
+-   [Manually Labelling Secrets](#manually-labelling-secrets)
+    -   [Handling Developer Secrets](#handling-developer-secrets)
+-   [What to do after marking an potential secret as a valid secret?](#what-to-do-after-marking-an-potential-secret-as-a-valid-secret)
+-   [Comparing Baselines](#comparing-baselines)
+-   [Report Generation](#report-generation)
+    -   [Running in CI / CD](#running-in-ci--cd)
+        -   [Using `detect-secrets:redhat-ubi` Docker Image](#using-detect-secretsredhat-ubi-docker-image)
+        -   [Using `detect-secrets:redhat-ubi-custom` Docker Image](#using-detect-secretsredhat-ubi-custom-docker-image)
+        -   [Using `detect-secrets` Docker Image](#using-detect-secrets-docker-image)
+        -   [Installing via pip](#installing-via-pip)
+            -   [Travis](#travis)
+            -   [Other pipelines](#other-pipelines)
+    -   [Output](#output)
+    -   [Usage](#usage)
+        -   [Instructions](#instructions)
+        -   [Examples:](#examples)
+            -   [Case: No --fail-on arguments provided](#case-no---fail-on-arguments-provided)
+            -   [Case: No --fail-on arguments provided, instructions omitted](#case-no---fail-on-arguments-provided-instructions-omitted)
+            -   [Case: All --fail-on arguments provided](#case-all---fail-on-arguments-provided)
+            -   [Case: All --fail-on arguments provided, instructions omitted](#case-all---fail-on-arguments-provided-instructions-omitted)
+            -   [Case: One --fail-on argument provided](#case-one---fail-on-argument-provided)
+            -   [Case: One --fail-on argument provided, instructions omitted](#case-one---fail-on-argument-provided-instructions-omitted)
+            -   [Case: No --fail-on arguments provided, json](#case-no---fail-on-arguments-provided-json)
+            -   [Case: All --fail-on arguments provided, json](#case-all---fail-on-arguments-provided-json)
+            -   [Case: One --fail-on argument provided, json](#case-one---fail-on-argument-provided-json)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -184,7 +185,7 @@ While similarly named, IBM's reporting feature fulfills a _different_ use case f
 
 ### Running in CI / CD
 
-Reporting has been designed with CI / CD in mind. By adding it to your pipeline, you will get a secrets report upon each build. If a given set of `fail-on` [conditions](#usage) aren't met, the build will fail because detect-secrets will emit exit code `1`.
+Reporting has been designed with CI / CD in mind. By adding it to your pipeline, you will get a secrets report upon each build. If a given set of `fail-on` [conditions](#usage) aren't met, the build will fail because detect-secrets will emit exit code `1`. To fix the build, follow the outputted instructions, and push your changes to your remote branch.
 
 If a report is run without any `fail-on` arguments (`detect-secrets audit --report .secrets.baseline`), it will execute all the fail checks by default, yet always emit a `0` exit code—even if checks fail.
 
@@ -194,15 +195,15 @@ In CI / CD, it is recommended to provide all `fail-on` arguments:
 detect-secrets audit --report --fail-on-unaudited --fail-on-live --fail-on-audited-real .secrets.baseline
 ```
 
-Below are some documented methods for adding detect-secrets reporting to your pipeline.
+Below are four documented methods for adding detect-secrets reporting to your pipeline.
 
-**It is recommended to use the `detect-secrets:redhat-ubi` Docker image.**
+**It is recommended to [use the `detect-secrets:redhat-ubi` Docker image](#using-detect-secrets:redhat-ubi-docker-image)**.
 
-#### Using the `detect-secrets:redhat-ubi` and `detect-secrets:latest` Docker Images
+#### Using `detect-secrets:redhat-ubi` Docker Image
 
-The **redhat-ubi** Docker image offers additional benefits over the general-purpose one - which is tagged with **latest**. One being additional security, and the other is that the Red Hat Universal Base Python Image (base image) is [OCI-compliant](https://opencontainers.org/faq/). Both come pre-packaged with Python, allowing you to skip the Python installation process.
+This Docker image offers additional benefits over the general-purpose [`detect-secrets` Docker image](#using-detect-secrets-docker-image). One being additional security, and the other is that the Red Hat Universal Base Image is [OCI-compliant](https://opencontainers.org/faq/).
 
-To use **redhat-ubi** image in your pipeline, add the following commands to your pipeline script (if opting to use **latest**, replace the image tag with this value):
+To use this image in your pipeline, add the following commands to your pipeline script:
 
 1. Pull the image:
     - `docker pull ibmcom/detect-secrets:redhat-ubi`
@@ -211,11 +212,13 @@ To use **redhat-ubi** image in your pipeline, add the following commands to your
 3. With the same directory mounted, run a report.
     - `docker run -it -a stdout --rm -v $(pwd):/code ibmcom/detect-secrets:redhat-ubi audit --report --fail-on-unaudited --fail-on-live --fail-on-audited-real .secrets.baseline`
 
-#### Using the `detect-secrets:redhat-ubi-custom` Docker Image
+#### Using `detect-secrets:redhat-ubi-custom` Docker Image
 
-This image uses the same base as [`detect-secrets:red-hat-ubi`](#using-detect-secrets:redhat-ubi-docker-image). Instead of requiring the user to provide detect-secrets commands, it automatically updates the baseline before reporting with opinionated fail-on options.
+This image uses the same base as [`detect-secrets:red-hat-ubi`](#using-detect-secrets:redhat-ubi-docker-image), but instead of passing in detect-secrets commands directly, only certain arguments can be passed in as environment variables. The [run-in-pipeline](./scripts/../../scripts/run-in-pipeline.sh) script comes pre-packaged with this image, and takes these arguments in as input.
 
-Please refer to [this](./scripts/../../scripts/run-in-pipeline.sh) script for a documented list of inputted environment variables.
+Please refer to this script for a documented list of inputted environment variables.
+
+Note that this script will update your baseline by default, unless `--env SKIP_SCAN=true` is passed in after `docker run`. Also, the default value for the baseline file is `.secrets.baseline`. If your baseline is named differently, the default value can be overridden with `--env BASELINE=your_baseline_filename`. Additionally, all `fail-on` options will be used by default.
 
 To use the image in your pipeline, add the following commands to your pipeline script:
 
@@ -223,6 +226,19 @@ To use the image in your pipeline, add the following commands to your pipeline s
     - `docker pull ibmcom/detect-secrets:redhat-ubi-custom`
 2. Mount the directory containing your code to the Docker image's `/code` folder, since it's the working directory for detect-secrets. The image will automatically update your baseline file and run a report against it:
     - `docker run -it -a stdout --rm -v $(pwd):/code ibmcom/detect-secrets:redhat-ubi-custom`
+
+#### Using `detect-secrets` Docker Image
+
+The general-purpose Docker image comes pre-packaged with Python, allowing you to skip the Python installation process.
+
+To use this image in your pipeline, add the following commands to your pipeline script:
+
+1. Pull the image:
+    - `docker pull ibmcom/detect-secrets`
+2. Mount the directory containing your code to the Docker image's `/code` folder, since it's the working directory for detect-secrets. Pass in the `scan` command to update the baseline file. This file should be up-to-date before a report is run:
+    - `docker run -it --rm -v $(pwd):/code ibmcom/detect-secrets scan --update .secrets.baseline`
+3. Run a report against the updated baseline file:
+    - `docker run -it --rm -v $(pwd):/code ibmcom/detect-secrets audit --report --fail-on-unaudited --fail-on-live --fail-on-audited-real .secrets.baseline`
 
 #### Installing via pip
 
@@ -278,13 +294,13 @@ $ detect-secrets audit --help
 
 Arguments available to be used with `detect-secrets audit --report`:
 
-| Argument                 | Description                                                                                                                                                                                                                                                                                                                            |
-| ------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `--fail-on-live`         | This condition is met when a secret has been verified to be live. To pass this check, make sure any secrets in the baseline file with a property of `"is_verified": true` have been remediated, and re-scan afterward.                                                                                                                 |
-| `--fail-on-unaudited`    | This condition is met when there are potential secrets in the baseline file which have not been audited yet. To pass this check, run `detect-secrets audit .secrets.baseline` to audit any unaudited secrets.                                                                                                                          |
-| `--fail-on-audited-real` | This condition is met when the baseline file contains one or more secrets which have been marked as actual secrets during the auditing stage. Secrets with a property of `"is_secret": true` meet this condition. To pass this check, remove those secrets from your code and re-scan so that they will be removed from your baseline. |
-| `--json`                 | Providing this flag will cause the report output to be formatted as JSON. Mutually exclusive with `--omit-instructions`.                                                                                                                                                                                                               |
-| `--omit-instructions`    | Providing this flag will omit instructions from the report. Mutually exclusive with `--json`.                                                                                                                                                                                                                                          |
+| Argument                    | Description                                                                                                                                                                                                                                                                                                                            |
+| --------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `--fail-on-on-live`         | This condition is met when a secret has been verified to be live. To pass this check, make sure any secrets in the baseline file with a property of `"is_verified": true` have been remediated, and re-scan afterward.                                                                                                                 |
+| `--fail-on-on-unaudited`    | This condition is met when there are potential secrets in the baseline file which have not been audited yet. To pass this check, run `detect-secrets audit .secrets.baseline` to audit any unaudited secrets.                                                                                                                          |
+| `--fail-on-on-audited-real` | This condition is met when the baseline file contains one or more secrets which have been marked as actual secrets during the auditing stage. Secrets with a property of `"is_secret": true` meet this condition. To pass this check, remove those secrets from your code and re-scan so that they will be removed from your baseline. |
+| `--json`                    | Providing this flag will cause the report output to be formatted as JSON. Mutually exclusive with `--omit-instructions`.                                                                                                                                                                                                               |
+| `--omit-instructions`       | Providing this flag will omit instructions from the report. Mutually exclusive with `--json`.                                                                                                                                                                                                                                          |
 
 #### Examples:
 
