@@ -228,7 +228,7 @@ To use the image in your pipeline, add the following commands to your pipeline s
 Users can reference a specific version of the detect-secrets redhat-ubi-tagged images. That way one can peg to the specific version for these images as we release newer versions of them instead of using the "latest" version.
 
 `ibmcom/detect-secrets:redhat-ubi`
-- This tag will be considered as the `"latest"` version for the redhat-ubi based detect secrets image.
+- This will be considered the `latest` version for the image.
 
 `ibmcom/detect-secrets:0.13.1.ibm.48.dss-redhat-ubi`
 - This one will allow users to peg themselves to the specific version, `0.13.1.ibm.48.dss`, of the redhat-ubi based detect secrets image.
