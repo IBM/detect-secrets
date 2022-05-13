@@ -231,7 +231,7 @@ Users can reference a specific version of the detect-secrets redhat-ubi-tagged i
 - This will be considered the `latest` version for the image.
 
 `ibmcom/detect-secrets:0.13.1.ibm.48.dss-redhat-ubi`
-- This one will allow users to peg themselves to the specific version, `0.13.1.ibm.48.dss`, of the redhat-ubi based detect secrets image.
+- This one will allow users to lock the image to a specific Detect Secrets version, in this case `0.13.1.ibm.48.dss`.
 
 `ibmcom/detect-secrets:redhat-ubi-custom`
 - This will be considered the `latest` version for the image.
