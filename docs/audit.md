@@ -224,6 +224,20 @@ To use the image in your pipeline, add the following commands to your pipeline s
 2. Mount the directory containing your code to the Docker image's `/code` folder, since it's the working directory for detect-secrets. The image will automatically update your baseline file and run a report against it:
     - `docker run -it -a stdout --rm -v $(pwd):/code ibmcom/detect-secrets:redhat-ubi-custom`
 
+#### Image Versioning:
+Users can reference a specific version of the detect-secrets redhat-ubi-tagged images. That way one can peg to the specific version for these images as we release newer versions of them instead of using the "latest" version.
+
+`ibmcom/detect-secrets:redhat-ubi`
+- This tag will be considered as the `"latest"` version for the redhat-ubi based detect secrets image.
+
+`ibmcom/detect-secrets:0.13.1.ibm.48.dss-redhat-ubi`
+- This one will allow users to peg themselves to the specific version, `0.13.1.ibm.48.dss`, of the redhat-ubi based detect secrets image.
+
+`ibmcom/detect-secrets:redhat-ubi-custom`
+- This tag will be considered as the `"latest"` version for the redhat-ubi based custom Detect Secrets image.
+
+`ibmcom/detect-secrets:0.13.1.ibm.48.dss-redhat-ubi-custom`
+- This one will allow users to peg themselves to the specific version, `0.13.1.ibm.48.dss`, of the redhat-ubi based custom detect secrets image.
 #### Installing via pip
 
 ##### Travis
