@@ -27,6 +27,7 @@ class TestGheDetector(object):
             ('credential :abcdef0123456789abcdef0123456789abcdef01', True),
             ('pasword :abcdef0123456789abcdef0123456789abcdef01', True),
             ('gh_pw := abcdef0123456789abcdef0123456789abcdef01', True),
+            ('auth_api-key = abcdef0123456789abcdef0123456789abcdef01', True),
             ('"GHE_API_KEY": "abcdef0123456789abcdef0123456789abcdef01"', True),
             ('GITHUB_API_TOKEN := "abcdef0123456789abcdef0123456789abcdef01"', True),
             ('https://username:abcdef0123456789abcdef0123456789abcdef01@github.ibm.com', True),
