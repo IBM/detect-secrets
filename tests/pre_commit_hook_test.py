@@ -1,4 +1,5 @@
 import json
+import os
 from contextlib import contextmanager
 
 import mock
@@ -156,6 +157,33 @@ class TestPreCommitHook:
         assert_commit_blocked('--use-all-plugins test_data/baseline.file')
         assert_commit_succeeds('--use-all-plugins --baseline baseline.file baseline.file')
 
+    @pytest.mark.usefixtures('cleanup_baseline')
+    @pytest.mark.parametrize(
+        'hook_command, return_code',
+        [
+            (
+                '--baseline will_be_mocked '
+                + 'test_data/files/file_with_secrets.py', 3,
+            ),
+            (
+                '--baseline will_be_mocked '
+                + 'test_data/files/file_with_secrets.py --no-version-check', 0,
+            ),
+        ],
+    )
+    def test_skip_version_check_no_changes(
+        self,
+        hook_command,
+        return_code,
+    ):
+        baseline = json.loads(_create_baseline())
+        baseline['version'] = '0.8.8'
+        with mock.patch(
+            'detect_secrets.pre_commit_hook._get_baseline_string_from_file',
+            return_value=json.dumps(baseline),
+        ):
+            assert_commit_result(hook_command, return_code)
+
     def test_quit_if_baseline_is_changed_but_not_staged(self, mock_log):
         with mock_git_calls(
             'detect_secrets.pre_commit_hook.subprocess.check_output',
@@ -309,6 +337,13 @@ def mock_get_baseline():
         'detect_secrets.pre_commit_hook.get_baseline',
     ) as m:
         yield m
+
+
+@pytest.fixture
+def cleanup_baseline(baseline_file='will_be_mocked'):
+    yield
+    if os.path.isfile(baseline_file):
+        os.remove(baseline_file)
 
 
 @contextmanager

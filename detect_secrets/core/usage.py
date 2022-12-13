@@ -68,7 +68,8 @@ class ParserBuilder(object):
             ._add_use_all_plugins_argument()\
             ._add_no_verify_flag()\
             ._add_output_verified_false_flag()\
-            ._add_fail_on_unaudited_flag()
+            ._add_fail_on_unaudited_flag()\
+            ._add_no_version_check_flag()
 
         PluginOptions(self.parser).add_arguments()
 
@@ -150,6 +151,14 @@ class ParserBuilder(object):
             '--fail-on-unaudited',
             action='store_true',
             help='Fail check if there are entries have not been audited in baseline.',
+        )
+        return self
+
+    def _add_no_version_check_flag(self):
+        self.parser.add_argument(
+            '--no-version-check',
+            action='store_true',
+            help='Skip update of local tool version in baseline when there are no new secrets.',
         )
         return self
 
