@@ -104,10 +104,9 @@ docker-publish-images: docker-login
 		done   \
 	done
 
-docker-publish-image:                                                                                  
+docker-publish-image:                                                                   
 	docker tag $(DOCKER_DOMAIN_LOCAL)/$(IMAGE_NAME) $(DOCKER_REGISTRY)/$(DOCKER_DOMAIN)/$(IMAGE_NAME); \
-	docker push $(DOCKER_REGISTRY)/$(DOCKER_DOMAIN)/$(IMAGE_NAME);									   
-
+	docker push $(DOCKER_REGISTRY)/$(DOCKER_DOMAIN)/$(IMAGE_NAME);
 
 publish-cos:
 	pip install requests packaging;                                                                                 \
