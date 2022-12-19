@@ -5,7 +5,6 @@ MAKEFLAGS += --warn-undefined-variables
 DEBUG_IMAGE_TAG := $(TRAVIS_BRANCH)-$(TRAVIS_BUILD_NUMBER)-id-$(TRAVIS_BUILD_ID)-time-$(shell date +%s)
 
 DOCKER_DOMAIN := git-defenders
-DOCKERHUB_DOMAIN := ibmcom
 
 DOCKER_REGISTRY_ICR := icr.io
 DOCKER_USER_ICR := iamapikey
