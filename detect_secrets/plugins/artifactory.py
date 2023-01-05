@@ -15,6 +15,8 @@ class ArtifactoryDetector(RegexBasedDetector):
         re.compile(r'(?:(?<==|:|")|(?<=\s)|(?<=^))AKC[a-zA-Z0-9]{10,}'),    # api token
         # artifactory encrypted passwords begin with AP[A-Z]
         re.compile(r'(?:(?<==|:|")|(?<=\s)|(?<=^))AP[\dABCDEF][a-zA-Z0-9]{8,}'),    # password
+        # artifactory identity tokens are different (base64 encoded reftkn:) and 64 chars
+	    re.compile(r'(?:(?<==|:|")|(?<=\s)|(?<=^))cmVmdGtuOg{54,54}'),  #identity token
     ]
 
     artifactory_url = 'na.artifactory.swg-devops.com/artifactory'
