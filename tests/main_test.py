@@ -132,22 +132,25 @@ class TestMain:
         )
 
     @pytest.mark.parametrize(
-        'string, expected_base64_result, expected_hex_result',
+        'string, expected_base64_result, expected_hex_result, expected_content_checker_result',
         [
             (
                 '012345678ab',
                 'False (3.459)',
                 'True  (3.459)',
+                'False',
             ),
             (
                 'Benign',
                 'False (2.252)',
+                'False',
                 'False',
             ),
             (
                 'key: 012345678ab',
                 'False',
                 'True  (3.459)',
+                'True  (unverified)',
             ),
         ],
     )
@@ -157,6 +160,7 @@ class TestMain:
         string,
         expected_base64_result,
         expected_hex_result,
+        expected_content_checker_result,
     ):
         with mock_stdin(
             string,
@@ -164,12 +168,14 @@ class TestMain:
             main_module,
         ) as printer_shim:
             assert main('scan --string'.split()) == 0
-            assert uncolor(printer_shim.message) == get_plugin_report(
+            expected = get_plugin_report(
                 {
                     'Base64HighEntropyString': expected_base64_result,
                     'HexHighEntropyString': expected_hex_result,
+                    'ContentChecker': expected_content_checker_result,
                 }, exclude=['Db2Detector'],
             )
+            assert uncolor(printer_shim.message) == expected
 
         mock_baseline_initialize.assert_not_called()
 
@@ -604,23 +610,31 @@ class TestMain:
             audit_module,
         ) as printer_shim:
             main('audit will_be_mocked'.split())
-
-            assert uncolor(printer_shim.message) == textwrap.dedent("""
-                Secret:      1 of 1
-                Filename:    {}
-                Secret Type: {}
-                ----------
-                {}
-                ----------
-                {}
-                ----------
-                Saving progress...
-            """)[1:].format(
-                filename,
-                baseline_dict['results'][filename][0]['type'],
-                expected_output,
-                POTENTIAL_SECRET_DETECTED_NOTE,
+            RHS = ''.join(
+                [
+                    (
+                        textwrap.dedent("""
+                            Secret:      {} of {}
+                            Filename:    {}
+                            Secret Type: {}
+                            ----------
+                            {}
+                            ----------
+                            {}
+                            ----------
+                        """)[1:].format(
+                            str(idx + 1), str(len(baseline_dict['results'][filename])),
+                            filename,
+                            baseline_dict['results'][filename][idx]['type'],
+                            expected_output,
+                            POTENTIAL_SECRET_DETECTED_NOTE,
+                        )
+                    )
+                    for idx in range(len(baseline_dict['results'][filename]))
+                ]
+                + ['Saving progress...\n'],
             )
+            assert uncolor(printer_shim.message) == RHS
 
     @pytest.mark.parametrize(
         'filename, expected_output',
@@ -628,6 +642,21 @@ class TestMain:
             (
                 'test_data/short_files/first_line.php',
                 {
+                    'ContentChecker': {
+                        'config': {
+                            'name': 'ContentChecker',
+                        },
+                        'results': {
+                            'false-positives': {},
+                            'true-positives': {},
+                            'unknowns': {
+                                'test_data/short_files/first_line.php': [{
+                                    'line': "secret = 'notHighEnoughEntropy'",
+                                    'plaintext': "secret = 'notHighEnoughEntropy'",
+                                }],
+                            },
+                        },
+                    },
                     'KeywordDetector': {
                         'config': {
                             'name': 'KeywordDetector',
