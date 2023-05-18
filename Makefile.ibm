@@ -70,8 +70,8 @@ trivy-scan-python-vulnerabilities:
 	$(TRIVY) fs --exit-code 1 --ignore-unfixed --security-checks vuln ./
 
 setup-mend:
-	curl -LJO http://pokgsa.ibm.com/gsa/pokgsa/home/t/h/thota123/whitesource/Unified%20Agent/wss-unified-agent.jar -o $(MEND)
-	sudo apt install openjdk-8-jdk -y
+	curl -sSfL http://pokgsa.ibm.com/gsa/pokgsa/home/t/h/thota123/whitesource/Unified%20Agent/wss-unified-agent.jar -o $(MEND)
+	# sudo apt install openjdk-8-jdk -y
 
 mend-scan:
 	java -jar  $(MEND)/wss-unified-agent.jar -d ./
