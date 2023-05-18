@@ -48,12 +48,15 @@ COSIGN_VERSION := $(shell curl -s "https://api.github.com/repos/sigstore/cosign/
 
 TRAVIS_COMMIT ?= head
 
+# Mend related
+MEND ?= /tmp/mend
+
 setup-trivy:
 	curl -sSfL https://github.com/aquasecurity/trivy/releases/download/v$(TRIVY_VERSION)/trivy_$(TRIVY_VERSION)_$(TRIVY_OS)-$(TRIVY_ARCH)bit.tar.gz -o /tmp/trivy.tar.gz
 	tar zxvf /tmp/trivy.tar.gz -C $(dir $(TRIVY)) trivy
 
 setup-cosign:
-	curl -sSfL https://github.com/sigstore/cosign/releases/download/v$(COSIGN_VERSION)/cosign-linux-amd64  -o $(COSIGN)
+	curl -sSfL https://github.com/sigstore/cosign/releases/download/v$(COSIGN_VERSION)/cosign-linux-amd64 -o $(COSIGN)
 	chmod +x $(COSIGN)
 
 trivy-scan-python-vulnerabilities:
@@ -67,11 +70,11 @@ trivy-scan-python-vulnerabilities:
 	$(TRIVY) fs --exit-code 1 --ignore-unfixed --security-checks vuln ./
 
 setup-mend:
-	curl -LJO http://pokgsa.ibm.com/gsa/pokgsa/home/t/h/thota123/whitesource/Unified%20Agent/wss-unified-agent.jar
+	curl -LJO http://pokgsa.ibm.com/gsa/pokgsa/home/t/h/thota123/whitesource/Unified%20Agent/wss-unified-agent.jar -o $(MEND)
 	sudo apt install openjdk-8-jdk -y
 
 mend-scan:
-	java -jar wss-unified-agent.jar -d ./
+	java -jar  $(MEND)/wss-unified-agent.jar -d ./
 
 docker-quality-images:
 	for image_name in $(DOCKER_IMAGES_TO_SCAN) ; do												\
