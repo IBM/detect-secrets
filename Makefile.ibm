@@ -66,6 +66,13 @@ trivy-scan-python-vulnerabilities:
 	pipenv lock
 	$(TRIVY) fs --exit-code 1 --ignore-unfixed --security-checks vuln ./
 
+setup-mend:
+	curl -LJO http://pokgsa.ibm.com/gsa/pokgsa/home/t/h/thota123/whitesource/Unified%20Agent/wss-unified-agent.jar
+	sudo apt install openjdk-8-jdk -y
+
+mend-scan:
+	java -jar wss-unified-agent.jar -d ./
+
 docker-quality-images:
 	for image_name in $(DOCKER_IMAGES_TO_SCAN) ; do												\
 		$(TRIVY) image --exit-code 1 --ignore-unfixed $(DOCKER_DOMAIN_LOCAL)/$*$${image_name};  \

@@ -7,6 +7,7 @@
 /.tox
 /venv*
 /tmp
+/whitesource/*
 
 .*ignore
 !.gitignore
