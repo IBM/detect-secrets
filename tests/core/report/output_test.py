@@ -641,13 +641,13 @@ Audited as real     Test Type      filenameB       60\n"""
         assert (
             captured.out
             == """{
-    "stats": {
-        "reviewed": 3,
-        "live": 0,
-        "unaudited": 0,
-        "audited_real": 0
-    },
-    "secrets": []
+	"stats": {
+		"reviewed": 3,
+		"live": 0,
+		"unaudited": 0,
+		"audited_real": 0
+	},
+	"secrets": []
 }\n"""
         )
 
@@ -674,32 +674,32 @@ Audited as real     Test Type      filenameB       60\n"""
         assert (
             captured.out
             == """{
-    "stats": {
-        "reviewed": 3,
-        "live": 1,
-        "unaudited": 1,
-        "audited_real": 1
-    },
-    "secrets": [
-        {
-            "failed_condition": "Live",
-            "filename": "will_be_mocked",
-            "line": 90,
-            "type": "Private key"
-        },
-        {
-            "failed_condition": "Unaudited",
-            "filename": "will_be_mocked",
-            "line": 120,
-            "type": "Hex High Entropy String"
-        },
-        {
-            "failed_condition": "Audited as real",
-            "filename": "will_be_mocked",
-            "line": 60,
-            "type": "Hex High Entropy String"
-        }
-    ]
+	"stats": {
+		"reviewed": 3,
+		"live": 1,
+		"unaudited": 1,
+		"audited_real": 1
+	},
+	"secrets": [
+		{
+			"failed_condition": "Live",
+			"filename": "will_be_mocked",
+			"line": 90,
+			"type": "Private key"
+		},
+		{
+			"failed_condition": "Unaudited",
+			"filename": "will_be_mocked",
+			"line": 120,
+			"type": "Hex High Entropy String"
+		},
+		{
+			"failed_condition": "Audited as real",
+			"filename": "will_be_mocked",
+			"line": 60,
+			"type": "Hex High Entropy String"
+		}
+	]
 }\n"""
         )
 
