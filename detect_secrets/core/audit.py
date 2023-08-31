@@ -331,7 +331,7 @@ def print_audit_results(baseline_filename):
                 baseline,
                 baseline_filename,
             ),
-            indent=2,
+            indent='\t',
             sort_keys=True,
         ),
     )
