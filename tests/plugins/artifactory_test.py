@@ -7,13 +7,14 @@ from detect_secrets.plugins.artifactory import ArtifactoryDetector
 
 ARTIFACTORY_TOKEN = 'AKCxxxxxxxxxx'
 ARTIFACTORY_TOKEN_BYTES = b'AKCxxxxxxxxxx'
-
+ARTIFACTORY_IDENTITY_TOKEN = b'cmVmdGtuxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'
 
 class TestArtifactoryDetector(object):
 
     @pytest.mark.parametrize(
         'token, payload, should_flag',
         [
+            ('cmVmdGtuxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx', 'Authorization: Bearer cmVmdGtuxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx', True),
             ('AP6xxxxxxxxxx', 'AP6xxxxxxxxxx', True),
             ('AP2xxxxxxxxxx', 'AP2xxxxxxxxxx', True),
             ('AP3xxxxxxxxxx', 'AP3xxxxxxxxxx', True),
@@ -21,24 +22,33 @@ class TestArtifactoryDetector(object):
             ('APAxxxxxxxxxx', 'APAxxxxxxxxxx', True),
             ('APBxxxxxxxxxx', 'APBxxxxxxxxxx', True),
             ('AKCxxxxxxxxxx', 'AKCxxxxxxxxxx', True),
+            ('cmVmdGtuxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx', 'cmVmdGtuxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx', True),
             ('AP6xxxxxxxxxx', ' AP6xxxxxxxxxx', True),
             ('AKCxxxxxxxxxx', ' AKCxxxxxxxxxx', True),
+            ('cmVmdGtuxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx', ' cmVmdGtuxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx', True),
             ('AP6xxxxxxxxxx', '=AP6xxxxxxxxxx', True),
             ('AKCxxxxxxxxxx', '=AKCxxxxxxxxxx', True),
+            ('cmVmdGtuxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx', '=cmVmdGtuxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx', True),
             ('AP6xxxxxxxxxx', '\"AP6xxxxxxxxxx\"', True),
             ('AKCxxxxxxxxxx', '\"AKCxxxxxxxxxx\"', True),
+            ('cmVmdGtuxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx', '\"cmVmdGtuxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\"', True),
             ('AP6xxxxxxxxxx', 'artif-key:AP6xxxxxxxxxx', True),
             ('AKCxxxxxxxxxx', 'artif-key:AKCxxxxxxxxxx', True),
+            ('cmVmdGtuxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx', 'artif-key:cmVmdGtuxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx', True),
             ('AKCxxxxxxxxxx', 'X-JFrog-Art-Api: AKCxxxxxxxxxx', True),
             ('AP6xxxxxxxxxx', 'X-JFrog-Art-Api: AP6xxxxxxxxxx', True),
+            ('cmVmdGtuxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx', 'X-JFrog-Art-Api: cmVmdGtuxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx', True),
             ('AKCxxxxxxxxxx', 'artifactoryx:_password=AKCxxxxxxxxxx', True),
             ('AP6xxxxxxxxxx', 'artifactoryx:_password=AP6xxxxxxxxxx', True),
+            ('cmVmdGtuxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx', 'artifactoryx:_password=cmVmdGtuxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx', True),
             ('', 'testAKCwithinsomeirrelevantstring', False),
             ('', 'testAP6withinsomeirrelevantstring', False),
+            ('', 'testcmVmdGtuwithinsomeirrelevantstring', False),
             ('', 'X-JFrog-Art-Api: $API_KEY', False),
             ('', 'X-JFrog-Art-Api: $PASSWORD', False),
             ('', 'artifactory:_password=AP6xxxxxx', False),
             ('', 'artifactory:_password=AKCxxxxxxxx', False),
+            ('', 'artifactory:_password=cmVmdGtuxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx', False),
         ],
     )
     def test_analyze_line(self, token, payload, should_flag):
