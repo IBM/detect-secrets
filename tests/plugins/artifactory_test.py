@@ -9,6 +9,7 @@ ARTIFACTORY_TOKEN = 'AKCxxxxxxxxxx'
 ARTIFACTORY_TOKEN_BYTES = b'AKCxxxxxxxxxx'
 ARTIFACTORY_IDENTITY_TOKEN = b'cmVmdGtuxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'
 
+
 class TestArtifactoryDetector(object):
 
     @pytest.mark.parametrize(
