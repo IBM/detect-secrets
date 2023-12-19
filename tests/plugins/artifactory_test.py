@@ -16,7 +16,7 @@ class TestArtifactoryDetector(object):
         'token, payload, should_flag',
         [
             ('cmVmdGtuxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx', 
-             'Authorization: Bearer cmVmdGtu
+             'Authorization: Bearer cmVmdGtu'
              'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx', True),
             ('AP6xxxxxxxxxx', 'AP6xxxxxxxxxx', True),
             ('AP2xxxxxxxxxx', 'AP2xxxxxxxxxx', True),
