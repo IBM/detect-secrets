@@ -16,7 +16,8 @@ class TestArtifactoryDetector(object):
         'token, payload, should_flag',
         [
             ('cmVmdGtuxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx', 
-             'Authorization: Bearer cmVmdGtuxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx', True),
+             'Authorization: Bearer cmVmdGtu
+             'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx', True),
             ('AP6xxxxxxxxxx', 'AP6xxxxxxxxxx', True),
             ('AP2xxxxxxxxxx', 'AP2xxxxxxxxxx', True),
             ('AP3xxxxxxxxxx', 'AP3xxxxxxxxxx', True),
@@ -45,11 +46,13 @@ class TestArtifactoryDetector(object):
             ('AKCxxxxxxxxxx', 'X-JFrog-Art-Api: AKCxxxxxxxxxx', True),
             ('AP6xxxxxxxxxx', 'X-JFrog-Art-Api: AP6xxxxxxxxxx', True),
             ('cmVmdGtuxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx', 
-             'X-JFrog-Art-Api: cmVmdGtuxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx', True),
+             'X-JFrog-Art-Api: cmVmdGtu'
+             'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx', True),
             ('AKCxxxxxxxxxx', 'artifactoryx:_password=AKCxxxxxxxxxx', True),
             ('AP6xxxxxxxxxx', 'artifactoryx:_password=AP6xxxxxxxxxx', True),
             ('cmVmdGtuxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx', 
-             'artifactoryx:_password=cmVmdGtuxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx', True),
+             'artifactoryx:_password=cmVmdGtu'
+             'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx', True),
             ('', 'testAKCwithinsomeirrelevantstring', False),
             ('', 'testAP6withinsomeirrelevantstring', False),
             ('', 'testcmVmdGtuwithinsomeirrelevantstring', False),
@@ -57,7 +60,8 @@ class TestArtifactoryDetector(object):
             ('', 'X-JFrog-Art-Api: $PASSWORD', False),
             ('', 'artifactory:_password=AP6xxxxxx', False),
             ('', 'artifactory:_password=AKCxxxxxxxx', False),
-            ('', 'artifactory:_password=cmVmdGtuxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx', False),
+            ('', 'artifactory:_password=cmVmdGtu'
+             'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx', False),
         ],
     )
     def test_analyze_line(self, token, payload, should_flag):
