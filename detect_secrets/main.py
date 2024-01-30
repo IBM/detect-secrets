@@ -49,8 +49,9 @@ def main(argv=None):
         if args.word_list_file:
             automaton, word_list_hash = build_automaton(args.word_list_file)
 
-        if args.plugins_reuse_excludes:
-            args.exclude_files, args.exclude_lines = maybe_get_existing_exclude(args.exclude_files, args.exclude_lines, _get_existing_baseline(args.import_filename))
+        _baseline = _get_existing_baseline(args.import_filename)
+        if args.plugins_reuse_excludes or (_baseline and _baseline.get("plugins_reuse_excludes", False)):
+            args.exclude_files, args.exclude_lines = maybe_get_existing_exclude(args.exclude_files, args.exclude_lines, _baseline)
 
         # Plugins are *always* rescanned with fresh settings, because
         # we want to get the latest updates.
@@ -189,6 +190,9 @@ def _perform_scan(args, plugins, automaton, word_list_hash):
         if not args.word_list_file and old_baseline.get('word_list'):
             args.word_list_file = old_baseline['word_list']['file']
 
+        if not args.plugins_reuse_excludes:
+            args.plugins_reuse_excludes = old_baseline.get('plugins_reuse_excludes', False)
+
     # If we have knowledge of an existing baseline file, we should use
     # that knowledge and add it to our exclude_files regex.
     if args.import_filename:
@@ -196,6 +200,7 @@ def _perform_scan(args, plugins, automaton, word_list_hash):
 
     new_baseline = baseline.initialize(
         plugins=plugins,
+        plugins_reuse_exclude=args.plugins_reuse_excludes,
         exclude_files_regex=args.exclude_files,
         exclude_lines_regex=args.exclude_lines,
         word_list_file=args.word_list_file,
