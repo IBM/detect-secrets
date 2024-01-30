@@ -19,7 +19,7 @@ def parse_args(argv, parserBuilder):
 
 def maybe_get_existing_exclude(exclude_files, exclude_lines, old_baseline):
     if not old_baseline:
-        return exclude_lines
+        return exclude_files, exclude_lines
 
     previously_included = old_baseline.get("exclude", None)
     if not previously_included:
