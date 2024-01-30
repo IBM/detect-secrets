@@ -17,6 +17,19 @@ def parse_args(argv, parserBuilder):
     return parserBuilder.add_console_use_arguments().parse_args(argv)
 
 
+def maybe_get_existing_exclude(exclude_files, exclude_lines, old_baseline):
+    if not old_baseline:
+        return exclude_lines
+
+    previously_included = old_baseline.get("exclude", None)
+    if not previously_included:
+        return exclude_files, exclude_lines
+
+    files = "|".join(filter(None, (exclude_files, previously_included.get("files",None))))
+    lines = "|".join(filter(None, (exclude_lines, previously_included.get("lines",None))))
+
+    return files, lines
+
 def main(argv=None):
     if len(sys.argv) == 1:  # pragma: no cover
         sys.argv.append('-h')
@@ -35,6 +48,9 @@ def main(argv=None):
         word_list_hash = None
         if args.word_list_file:
             automaton, word_list_hash = build_automaton(args.word_list_file)
+
+        if args.plugins_reuse_excludes:
+            args.exclude_files, args.exclude_lines = maybe_get_existing_exclude(args.exclude_files, args.exclude_lines, _get_existing_baseline(args.import_filename))
 
         # Plugins are *always* rescanned with fresh settings, because
         # we want to get the latest updates.
