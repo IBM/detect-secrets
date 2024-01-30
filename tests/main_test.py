@@ -87,6 +87,7 @@ class TestMain:
 
         mock_baseline_initialize.assert_called_once_with(
             plugins=Any(tuple),
+            plugins_reuse_excludes=None,
             exclude_files_regex=None,
             exclude_lines_regex=None,
             path='.',
@@ -104,6 +105,7 @@ class TestMain:
 
         mock_baseline_initialize.assert_called_once_with(
             plugins=Any(tuple),
+            plugins_reuse_excludes=None,
             exclude_files_regex=None,
             exclude_lines_regex=None,
             path=['test_data'],
@@ -123,6 +125,7 @@ class TestMain:
 
         mock_baseline_initialize.assert_called_once_with(
             plugins=Any(tuple),
+            plugins_reuse_excludes=None,
             exclude_files_regex='some_pattern_here',
             exclude_lines_regex='other_patt',
             path='.',
@@ -208,6 +211,7 @@ class TestMain:
 
         mock_baseline_initialize.assert_called_once_with(
             plugins=Any(tuple),
+            plugins_reuse_excludes=None,
             exclude_files_regex=None,
             exclude_lines_regex=None,
             path='.',
@@ -265,6 +269,7 @@ class TestMain:
 
         mock_baseline_initialize.assert_called_once_with(
             plugins=Any(tuple),
+            plugins_reuse_excludes=None,
             exclude_files_regex='^non_existed_baseline_file$',
             exclude_lines_regex=None,
             path='.',
