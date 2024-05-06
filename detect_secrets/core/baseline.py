@@ -366,7 +366,7 @@ def _get_git_tracked_files(rootdir='.'):
         with open(os.devnull, 'w') as fnull:
             # git <1.8.5 https://github.com/git/git/commit/44e1e4d67d5148c245db362cc48c3cc6c2ec82ca
             # doesn't support -C <path>
-            git_major, git_minor, git_patch, _ = subprocess.check_output(
+            git_major, git_minor, git_patch, *_ = subprocess.check_output(
                 [
                     'git',
                     '--version',
