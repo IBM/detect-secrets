@@ -345,6 +345,7 @@ def format_baseline_for_output(baseline):
         separators=(',', ': '),
     )
 
+
 def _get_git_tracked_files(rootdir='.'):
     """Parsing .gitignore rules is hard.
 
@@ -363,9 +364,9 @@ def _get_git_tracked_files(rootdir='.'):
 
     # git <1.8.5 https://github.com/git/git/commit/44e1e4d67d5148c245db362cc48c3cc6c2ec82ca
     # doesn't support -C <path> and we can achieve the same using cwd arg to subproc
-    cmd = ["git", "ls-files"]
+    cmd = ['git', 'ls-files']
     if not os.path.exists(rootdir) or not os.path.isdir(rootdir):
-        log.debug(f"Skipping {rootdir} bc dir doesn't exist or isn't a directory")
+        log.debug(f'Skipping {rootdir} bc dir doesn\'t exist or isn\'t a directory')
         return []
 
     try:
@@ -378,8 +379,10 @@ def _get_git_tracked_files(rootdir='.'):
                 output.append(relative_path)
 
     except subprocess.CalledProcessError as err:
-        log.error('detect-secrets: Encountered error trying to list git tracked '+
-                  f'files for dir "{rootdir}": {str(err)}')
+        log.error(
+            'detect-secrets: Encountered error trying to list git tracked ' +
+            f'files for dir {rootdir}: {str(err)}',
+        )
         pass
 
     return output
