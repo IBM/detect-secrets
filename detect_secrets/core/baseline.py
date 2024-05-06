@@ -345,7 +345,6 @@ def format_baseline_for_output(baseline):
         separators=(',', ': '),
     )
 
-
 def _get_git_tracked_files(rootdir='.'):
     """Parsing .gitignore rules is hard.
 
@@ -361,28 +360,18 @@ def _get_git_tracked_files(rootdir='.'):
     :returns: filepaths to files which git currently tracks (locally)
     """
     output = []
-    git_dir_opts = []
+
+    # git <1.8.5 https://github.com/git/git/commit/44e1e4d67d5148c245db362cc48c3cc6c2ec82ca
+    # doesn't support -C <path> and we can achieve the same using cwd arg to subproc
+    cmd = ["git", "ls-files"]
+    if not os.path.exists(rootdir) or not os.path.isdir(rootdir):
+        log.debug(f"Skipping {rootdir} bc dir doesn't exist or isn't a directory")
+        return []
+
     try:
         with open(os.devnull, 'w') as fnull:
-            # git <1.8.5 https://github.com/git/git/commit/44e1e4d67d5148c245db362cc48c3cc6c2ec82ca
-            # doesn't support -C <path>
-            git_major, git_minor, git_patch, *_ = subprocess.check_output(
-                [
-                    'git',
-                    '--version',
-                ],
-                stderr=fnull,
-            ).decode('utf-8').split()[-1].split(".")
+            git_files = subprocess.check_output(cmd, cwd=rootdir, stderr=fnull)
 
-            if int(git_major) == 1 and int(git_minor) <= 8 and int(git_patch) < 5:
-                git_dir_opts = ["--git-dir", os.path.join(rootdir, ".git")]
-            else:
-                git_dir_opts = ["-C", rootdir]
-
-            git_files = subprocess.check_output(
-                ['git' ] + git_dir_opts + ['ls-files'],
-                stderr=fnull,
-            )
         for filename in git_files.decode('utf-8').split():
             relative_path = util.get_relative_path_if_in_cwd(rootdir, filename)
             if relative_path:
