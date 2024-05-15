@@ -21,7 +21,7 @@ class ArtifactoryDetector(RegexBasedDetector):
 
     def verify(self, token, *args, **kwargs):
         try:
-            if type(token) == bytes:
+            if isinstance(token, bytes):
                 token = token.decode('UTF-8')
             headers = {'X-JFrog-Art-API': token}
             response = requests.get(
