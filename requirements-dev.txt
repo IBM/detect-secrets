@@ -12,7 +12,7 @@ responses
 tox-pip-extensions
 tox>=3.8
 unidiff
-ibm_db
+ibm_db; platform_machine == 'x86_64'
 boxsdk[jwt]<4.0.0
 pyahocorasick
 tabulate

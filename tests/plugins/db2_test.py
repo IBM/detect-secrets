@@ -1,15 +1,21 @@
+import platform
 import textwrap
 
 import pytest
-from mock import MagicMock
-from mock import patch
-
 from detect_secrets.core.constants import VerifiedResult
 from detect_secrets.core.potential_secret import PotentialSecret
-from detect_secrets.plugins.db2 import Db2Detector
-from detect_secrets.plugins.db2 import find_other_factor
-from detect_secrets.plugins.db2 import get_hostname_port_database_from_url
+try:
+    from detect_secrets.plugins.db2 import (
+        Db2Detector,
+        find_other_factor,
+        get_hostname_port_database_from_url,
+    )
+except ModuleNotFoundError:  # pragma: no cover
+    if platform.machine() not in ("x86_64", "AMD64"):
+        pytest.skip(reason="ibm_db2 module only runs on x86_64", allow_module_level=True)
+    raise
 
+from mock import MagicMock, patch
 
 DB2_USER = 'fake_user'
 DB2_PASSWORD = 'fake_password'

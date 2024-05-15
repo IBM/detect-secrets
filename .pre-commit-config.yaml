@@ -11,6 +11,7 @@ repos:
           - id: double-quote-string-fixer
           - id: end-of-file-fixer
           - id: name-tests-test
+            exclude: "^tests/testing/.*$"
           - id: trailing-whitespace
     - repo: https://github.com/pycqa/flake8
       rev: 3.9.2
