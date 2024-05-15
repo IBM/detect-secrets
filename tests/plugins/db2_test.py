@@ -2,6 +2,7 @@ import platform
 import textwrap
 
 import pytest
+
 from detect_secrets.core.constants import VerifiedResult
 from detect_secrets.core.potential_secret import PotentialSecret
 try:
@@ -11,8 +12,8 @@ try:
         get_hostname_port_database_from_url,
     )
 except ModuleNotFoundError:  # pragma: no cover
-    if platform.machine() not in ("x86_64", "AMD64"):
-        pytest.skip(reason="ibm_db2 module only runs on x86_64", allow_module_level=True)
+    if platform.machine() not in ('x86_64', 'AMD64'):
+        pytest.skip(reason='ibm_db2 module only runs on x86_64', allow_module_level=True)
     raise
 
 from mock import MagicMock, patch

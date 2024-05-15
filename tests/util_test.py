@@ -6,12 +6,12 @@ import mock
 import pytest
 import responses
 from packaging.version import parse
+from testing.mocks import mock_open
+from testing.util import uncolor
 
 from detect_secrets import util
 from detect_secrets import VERSION
 from detect_secrets.plugins.common import filters
-from testing.mocks import mock_open
-from testing.util import uncolor
 
 GIT_REPO_SHA = b'cbb33d8c545ccf5c55fdcc7d5b0218078598e677'
 GIT_REMOTES_VERBOSE_ONE_URL = (

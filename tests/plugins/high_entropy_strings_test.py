@@ -1,10 +1,10 @@
 import codecs
 
 import pytest
+from testing.mocks import mock_file_object
 
 from detect_secrets.plugins.high_entropy_strings import Base64HighEntropyString
 from detect_secrets.plugins.high_entropy_strings import HexHighEntropyString
-from testing.mocks import mock_file_object
 
 
 class HighEntropyStringsTest:
@@ -258,7 +258,7 @@ class HexHighEntropyStringsWithStandardEntropy(HexHighEntropyString):
     def __init__(self, *args, **kwargs):
         super(HexHighEntropyStringsWithStandardEntropy, self).__init__(
             *args,
-            **kwargs
+            **kwargs,
         )
 
     def calculate_shannon_entropy(self, data):
