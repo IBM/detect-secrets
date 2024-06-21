@@ -10,7 +10,7 @@ pytest
 pyyaml
 responses
 tox-pip-extensions
-tox>=3.8
+tox<4.0
 unidiff
 ibm_db
 boxsdk[jwt]
