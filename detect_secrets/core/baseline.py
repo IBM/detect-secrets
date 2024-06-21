@@ -291,9 +291,9 @@ def merge_baseline(old_baseline, new_baseline, keep_old_results=False):
 
 def merge_results(old_results, new_results, keep_old_results=False):
     """Update results in new baseline with audit information from old baseline.
-    Unless keep_old_results is set True
+   
 
-    Secrets only appear in old baseline are ignored.
+    Secrets that only appear in old baseline are ignored. Unless keep_old_results is set True
 
     If secret exists in both old and new baselines, old baseline has audit (is_secret)
     info but new baseline does not, then audit info will be copied to new baseline.
