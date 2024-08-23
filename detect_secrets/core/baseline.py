@@ -16,6 +16,7 @@ log = get_logger(format_string='%(message)s')
 def initialize(
     path,
     plugins,
+    plugins_reuse_excludes=None,
     exclude_files_regex=None,
     exclude_lines_regex=None,
     word_list_file=None,
@@ -32,6 +33,9 @@ def initialize(
 
     :type plugins: tuple of detect_secrets.plugins.base.BasePlugin
     :param plugins: rules to initialize the SecretsCollection with.
+
+    :type plugins_reuse_excludes: bool|None
+    :param plugins_reuse_excludes optional bool whether plugins were forced to reuse excludes.
 
     :type exclude_files_regex: str|None
     :type exclude_lines_regex: str|None
@@ -53,6 +57,7 @@ def initialize(
     """
     output = SecretsCollection(
         plugins,
+        plugins_reuse_excludes=plugins_reuse_excludes,
         exclude_files=exclude_files_regex,
         exclude_lines=exclude_lines_regex,
         word_list_file=word_list_file,
@@ -361,22 +366,30 @@ def _get_git_tracked_files(rootdir='.'):
     :returns: filepaths to files which git currently tracks (locally)
     """
     output = []
+
+    # git <1.8.5 https://github.com/git/git/commit/44e1e4d67d5148c245db362cc48c3cc6c2ec82ca
+    # doesn't support -C <path> and we can achieve the same using cwd arg to subproc
+    cmd = ['git', 'ls-files']
+    if not os.path.exists(rootdir) or not os.path.isdir(rootdir):
+        log.debug(f'Skipping {rootdir} bc dir doesn\'t exist or isn\'t a directory')
+        return []
+
     try:
         with open(os.devnull, 'w') as fnull:
-            git_files = subprocess.check_output(
-                [
-                    'git',
-                    '-C', rootdir,
-                    'ls-files',
-                ],
-                stderr=fnull,
-            )
+            git_files = subprocess.check_output(cmd, cwd=rootdir, stderr=fnull)
+
         for filename in git_files.decode('utf-8').split():
             relative_path = util.get_relative_path_if_in_cwd(rootdir, filename)
             if relative_path:
                 output.append(relative_path)
-    except subprocess.CalledProcessError:
+
+    except subprocess.CalledProcessError as err:
+        log.error(
+            'detect-secrets: Encountered error trying to list git tracked ' +
+            f'files for dir {rootdir}: {str(err)}',
+        )
         pass
+
     return output
 
 

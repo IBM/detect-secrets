@@ -3,6 +3,10 @@ import random
 
 import mock
 import pytest
+from testing.factories import secrets_collection_factory
+from testing.mocks import mock_git_calls
+from testing.mocks import mock_open
+from testing.mocks import SubprocessMock
 
 from detect_secrets.core import baseline
 from detect_secrets.core.baseline import format_baseline_for_output
@@ -14,10 +18,6 @@ from detect_secrets.core.baseline import trim_baseline_of_removed_secrets
 from detect_secrets.core.potential_secret import PotentialSecret
 from detect_secrets.plugins.high_entropy_strings import Base64HighEntropyString
 from detect_secrets.plugins.high_entropy_strings import HexHighEntropyString
-from testing.factories import secrets_collection_factory
-from testing.mocks import mock_git_calls
-from testing.mocks import mock_open
-from testing.mocks import SubprocessMock
 
 
 class TestInitializeBaseline:
@@ -72,7 +72,7 @@ class TestInitializeBaseline:
             'detect_secrets.core.baseline.subprocess.check_output',
             (
                 SubprocessMock(
-                    expected_input='git -C ./test_data/files ls-files',
+                    expected_input='git ls-files',
                     should_throw_exception=True,
                     mocked_output='',
                 ),

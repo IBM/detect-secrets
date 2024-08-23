@@ -1,10 +1,15 @@
 import json
+import platform
 import shlex
 import textwrap
 from contextlib import contextmanager
 
 import mock
 import pytest
+from testing.factories import secrets_collection_factory
+from testing.mocks import Any
+from testing.mocks import mock_printer
+from testing.util import uncolor
 
 from detect_secrets import main as main_module
 from detect_secrets import VERSION
@@ -12,10 +17,6 @@ from detect_secrets.core import audit as audit_module
 from detect_secrets.core.constants import POTENTIAL_SECRET_DETECTED_NOTE
 from detect_secrets.main import main
 from detect_secrets.plugins.common.util import import_plugins
-from testing.factories import secrets_collection_factory
-from testing.mocks import Any
-from testing.mocks import mock_printer
-from testing.util import uncolor
 
 
 def get_list_of_plugins(include=None, exclude=None):
@@ -87,6 +88,7 @@ class TestMain:
 
         mock_baseline_initialize.assert_called_once_with(
             plugins=Any(tuple),
+            plugins_reuse_excludes=False,
             exclude_files_regex=None,
             exclude_lines_regex=None,
             path='.',
@@ -104,6 +106,7 @@ class TestMain:
 
         mock_baseline_initialize.assert_called_once_with(
             plugins=Any(tuple),
+            plugins_reuse_excludes=False,
             exclude_files_regex=None,
             exclude_lines_regex=None,
             path=['test_data'],
@@ -123,6 +126,7 @@ class TestMain:
 
         mock_baseline_initialize.assert_called_once_with(
             plugins=Any(tuple),
+            plugins_reuse_excludes=False,
             exclude_files_regex='some_pattern_here',
             exclude_lines_regex='other_patt',
             path='.',
@@ -190,6 +194,10 @@ class TestMain:
                 }, exclude=['Db2Detector'],
             )
 
+    @pytest.mark.skipif(
+        platform.machine() not in ('x86_64', 'AMD64'),
+        reason='ibm_db2 only runs on x86_64',
+    )
     def test_scan_string_cli_overrides_stdin_db2_enabled(self):
         with mock_stdin(
             '012345678ab',
@@ -208,6 +216,7 @@ class TestMain:
 
         mock_baseline_initialize.assert_called_once_with(
             plugins=Any(tuple),
+            plugins_reuse_excludes=False,
             exclude_files_regex=None,
             exclude_lines_regex=None,
             path='.',
@@ -265,6 +274,7 @@ class TestMain:
 
         mock_baseline_initialize.assert_called_once_with(
             plugins=Any(tuple),
+            plugins_reuse_excludes=False,
             exclude_files_regex='^non_existed_baseline_file$',
             exclude_lines_regex=None,
             path='.',

@@ -1,5 +1,5 @@
 pip>=21.1
-urllib3<2.0.0
+urllib3
 coverage>=6.0b1
 certifi>=2022.12.07
 flake8
@@ -9,10 +9,9 @@ pre-commit
 pytest
 pyyaml
 responses
-tox-pip-extensions
 tox>=3.8
 unidiff
-ibm_db
+ibm_db; platform_machine == 'x86_64'
 boxsdk[jwt]
 pyahocorasick
 tabulate

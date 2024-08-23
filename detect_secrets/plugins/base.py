@@ -59,7 +59,7 @@ class BasePlugin:
         exclude_lines_regex=None,
         should_verify=False,
         false_positive_heuristics=None,
-        **kwargs
+        **kwargs,
     ):
         """
         :type exclude_lines_regex: str|None
@@ -426,7 +426,7 @@ class RegexBasedDetector(BasePlugin):
         self,
         string,
         *args,
-        **kwargs
+        **kwargs,
     ):
         for regex in self.denylist:
             for match in regex.findall(string):

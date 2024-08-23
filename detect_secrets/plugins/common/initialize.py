@@ -41,7 +41,7 @@ def from_parser_builder(
                 automaton=automaton,
                 should_verify_secrets=should_verify_secrets,
                 plugin_filenames=plugin_filenames,
-                **plugins_dict[plugin_name]
+                **plugins_dict[plugin_name],
             ),
         )
 
@@ -200,7 +200,7 @@ def from_plugin_classname(
             exclude_lines_regex=exclude_lines_regex,
             automaton=automaton,
             should_verify=should_verify_secrets,
-            **kwargs
+            **kwargs,
         )
     except TypeError:
         log.warning('Unable to initialize plugin!')
@@ -248,5 +248,5 @@ def from_secret_type(secret_type, settings, plugin_filenames=None):
                 automaton=None,
                 should_verify_secrets=False,
 
-                **plugin_init_vars
+                **plugin_init_vars,
             )

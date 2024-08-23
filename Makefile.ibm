@@ -61,8 +61,9 @@ trivy-scan-python-vulnerabilities:
 	PIPENV_IGNORE_VIRTUALENVS=True # Forces Pipenv to ignore the existing virtual environment and create its own instead
 
 	# Generate a Pipfile.lock, Trivy does not auto-detect requirements-dev.txt (https://aquasecurity.github.io/trivy/v0.28.1/docs/vulnerability/detection/language/)
-	./scripts/gen-pipfile.sh > Pipfile
+	#./scripts/gen-pipfile.sh > Pipfile
 	pipenv --python `which python3`
+	pipenv install -r requirements-dev.txt
 	pipenv lock
 	$(TRIVY) fs --exit-code 1 --ignore-unfixed --scanners vuln ./
 

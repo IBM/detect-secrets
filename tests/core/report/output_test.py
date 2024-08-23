@@ -3,6 +3,8 @@ from copy import deepcopy
 
 import mock
 import pytest
+from testing.baseline import baseline
+from testing.baseline import baseline_filename
 
 from detect_secrets.core import audit
 from detect_secrets.core.color import AnsiColor
@@ -13,8 +15,6 @@ from detect_secrets.core.report.output import print_json_report
 from detect_secrets.core.report.output import print_stats
 from detect_secrets.core.report.output import print_summary
 from detect_secrets.core.report.output import print_table_report
-from testing.baseline import baseline
-from testing.baseline import baseline_filename
 
 
 @pytest.fixture

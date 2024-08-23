@@ -42,7 +42,7 @@ class IbmCloudIamDetector(RegexBasedDetector):
 
 
 def verify_cloud_iam_api_key(apikey):  # pragma: no cover
-    if type(apikey) == bytes:
+    if isinstance(apikey, bytes):
         apikey = apikey.decode('UTF-8')
     headers = {
         'Content-Type': 'application/x-www-form-urlencoded',

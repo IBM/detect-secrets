@@ -288,7 +288,7 @@ class KeywordDetector(BasePlugin):
         super(KeywordDetector, self).__init__(
             exclude_lines_regex=exclude_lines_regex,
             false_positive_heuristics=false_positive_heuristics,
-            **kwargs
+            **kwargs,
         )
 
         self.keyword_exclude = None
