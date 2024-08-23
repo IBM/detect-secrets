@@ -1,7 +1,7 @@
 import pytest
+from testing.mocks import mock_file_object
 
 from detect_secrets.plugins.slack import SlackDetector
-from testing.mocks import mock_file_object
 
 
 class TestSlackDetector:

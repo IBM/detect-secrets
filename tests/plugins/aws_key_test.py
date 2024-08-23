@@ -2,13 +2,13 @@ import textwrap
 
 import mock
 import pytest
+from testing.mocks import mock_file_object
 
 from detect_secrets.core.constants import VerifiedResult
 from detect_secrets.core.potential_secret import PotentialSecret
 from detect_secrets.plugins.aws import AWSKeyDetector
 from detect_secrets.plugins.aws import get_secret_access_keys
 from detect_secrets.plugins.aws import verify_aws_secret_access_key
-from testing.mocks import mock_file_object
 
 
 EXAMPLE_SECRET = 'wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY'

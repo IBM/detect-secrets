@@ -47,7 +47,7 @@ class HighEntropyStringsPlugin(BasePlugin):
             exclude_lines_regex=exclude_lines_regex,
             false_positive_heuristics=false_positive_heuristics,
             *args,
-            **kwargs
+            **kwargs,
         )
 
     def analyze(self, file, filename, output_raw=False, output_verified_false=False):
@@ -337,7 +337,7 @@ class HexHighEntropyString(HighEntropyStringsPlugin):
             limit=hex_limit,
             exclude_lines_regex=exclude_lines_regex,
             automaton=automaton,
-            **kwargs
+            **kwargs,
         )
 
     @classproperty
