@@ -72,7 +72,7 @@ class TestInitializeBaseline:
             'detect_secrets.core.baseline.subprocess.check_output',
             (
                 SubprocessMock(
-                    expected_input='git -C ./test_data/files ls-files',
+                    expected_input='git ls-files',
                     should_throw_exception=True,
                     mocked_output='',
                 ),
