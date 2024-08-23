@@ -65,7 +65,7 @@ trivy-scan-python-vulnerabilities:
 	pipenv --python `which python3`
 	pipenv install -r requirements-dev.txt
 	pipenv lock
-	$(TRIVY) fs --exit-code 1 --ignore-unfixed --scanners vuln --file-patterns ./
+	$(TRIVY) fs --exit-code 1 --ignore-unfixed --scanners vuln ./
 
 docker-quality-images:
 	for image_name in $(DOCKER_IMAGES_TO_SCAN) ; do												\
