@@ -19,9 +19,9 @@ deploy:
 matrix:
     include:
         - env: TOXENV=py38
-          python: 3.8.18
+          python: 3.8.19
         - env: TOXENV=py39
-          python: 3.9.18
+          python: 3.9.19
 before_install:
     - echo -e "machine github.com\n  login $GH_ACCESS_TOKEN" >> ~/.netrc # Login to GitHub
     - echo -e "machine github.ibm.com\n  login $GHE_ACCESS_TOKEN" >> ~/.netrc # Login to GitHub Enterprise
