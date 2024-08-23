@@ -5,7 +5,7 @@ from detect_secrets import VERSION
 from detect_secrets.constants import DEFAULT_GHE_INSTANCE
 
 
-def add_plugins_reuse_exclude_flag(parser):
+def add_plugins_reuse_excludes_flag(parser):
     parser.add_argument(
         '--plugins-reuse-excludes',
         action='store_true',
@@ -97,7 +97,7 @@ class ParserBuilder(object):
 
     def add_pre_commit_arguments(self):
         self._add_filenames_argument()\
-            ._add_plugins_reuse_exclude_flag()\
+            ._add_plugins_reuse_excludes_flag()\
             ._add_set_baseline_argument()\
             ._add_exclude_lines_argument()\
             ._add_word_list_argument()\
@@ -163,8 +163,8 @@ class ParserBuilder(object):
         )
         return self
 
-    def _add_plugins_reuse_exclude_flag(self):
-        add_plugins_reuse_exclude_flag(self.parser)
+    def _add_plugins_reuse_excludes_flag(self):
+        add_plugins_reuse_excludes_flag(self.parser)
         return self
 
     def _add_exclude_lines_argument(self):
@@ -237,7 +237,7 @@ class ScanOptions:
 
         # Pairing `--plugins-reuse-excludes` to
         # both pre-commit and `--scan` because it can be used for both.
-        add_plugins_reuse_exclude_flag(self.parser)
+        add_plugins_reuse_excludes_flag(self.parser)
 
         # Pairing `--exclude-lines` and `--word-list` to
         # both pre-commit and `--scan` because it can be used for both.

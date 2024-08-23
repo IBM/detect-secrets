@@ -21,7 +21,7 @@ class SecretsCollection:
     def __init__(
         self,
         plugins=(),
-        plugins_reuse_exclude=None,
+        plugins_reuse_excludes=None,
         exclude_files=None,
         exclude_lines=None,
         word_list_file=None,
@@ -47,7 +47,7 @@ class SecretsCollection:
         """
         self.data = {}
         self.plugins = plugins
-        self.plugins_reuse_exclude = plugins_reuse_exclude
+        self.plugins_reuse_excludes = plugins_reuse_excludes
         self.exclude_files = exclude_files
         self.exclude_lines = exclude_lines
         self.word_list_file = word_list_file
@@ -344,7 +344,7 @@ class SecretsCollection:
         plugins_used = sorted(plugins_used, key=lambda x: x['name'])
 
         return {
-            **({"plugins_reuse_excludes": True} if self.plugins_reuse_exclude else {}),
+            **({"plugins_reuse_excludes": True} if self.plugins_reuse_excludes else {}),
             'generated_at': strftime('%Y-%m-%dT%H:%M:%SZ', gmtime()),
             'exclude': {
                 'files': self.exclude_files,

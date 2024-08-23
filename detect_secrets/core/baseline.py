@@ -16,7 +16,7 @@ log = get_logger(format_string='%(message)s')
 def initialize(
     path,
     plugins,
-    plugins_reuse_exclude=None,
+    plugins_reuse_excludes=None,
     exclude_files_regex=None,
     exclude_lines_regex=None,
     word_list_file=None,
@@ -34,8 +34,8 @@ def initialize(
     :type plugins: tuple of detect_secrets.plugins.base.BasePlugin
     :param plugins: rules to initialize the SecretsCollection with.
 
-    :type plugins_reuse_exclude: bool|None
-    :param plugins_reuse_exclude optional bool indicating whether plugins were forced to reuse excludes.
+    :type plugins_reuse_excludes: bool|None
+    :param plugins_reuse_excludes optional bool indicating whether plugins were forced to reuse excludes.
 
     :type exclude_files_regex: str|None
     :type exclude_lines_regex: str|None
@@ -57,7 +57,7 @@ def initialize(
     """
     output = SecretsCollection(
         plugins,
-        plugins_reuse_exclude=plugins_reuse_exclude,
+        plugins_reuse_excludes=plugins_reuse_excludes,
         exclude_files=exclude_files_regex,
         exclude_lines=exclude_lines_regex,
         word_list_file=word_list_file,

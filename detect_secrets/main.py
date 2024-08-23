@@ -49,7 +49,7 @@ def main(argv=None):
         if args.word_list_file:
             automaton, word_list_hash = build_automaton(args.word_list_file)
 
-        _baseline = _get_existing_baseline(args.import_filename)
+        _baseline = _get_existing_baseline(args.import_filename, args.string)
         if args.plugins_reuse_excludes or (_baseline and _baseline.get("plugins_reuse_excludes", False)):
             args.exclude_files, args.exclude_lines = maybe_get_existing_exclude(args.exclude_files, args.exclude_lines, _baseline)
 
@@ -170,7 +170,7 @@ def _perform_scan(args, plugins, automaton, word_list_hash):
 
     :rtype: dict
     """
-    old_baseline = _get_existing_baseline(args.import_filename)
+    old_baseline = _get_existing_baseline(args.import_filename, args.string)
     if old_baseline:
         plugins = initialize.merge_plugins_from_baseline(
             _get_plugins_from_baseline(old_baseline, tuple(args.plugin_filenames)),
@@ -200,7 +200,7 @@ def _perform_scan(args, plugins, automaton, word_list_hash):
 
     new_baseline = baseline.initialize(
         plugins=plugins,
-        plugins_reuse_exclude=args.plugins_reuse_excludes,
+        plugins_reuse_excludes=args.plugins_reuse_excludes,
         exclude_files_regex=args.exclude_files,
         exclude_lines_regex=args.exclude_lines,
         word_list_file=args.word_list_file,
@@ -221,7 +221,7 @@ def _perform_scan(args, plugins, automaton, word_list_hash):
     return new_baseline
 
 
-def _get_existing_baseline(import_filename):
+def _get_existing_baseline(import_filename, args_string):
     # Favors --update argument over stdin.
     if import_filename:
         try:
@@ -235,7 +235,8 @@ def _get_existing_baseline(import_filename):
                     file=sys.stderr,
                 )
                 raise fnf_error
-    if not sys.stdin.isatty():
+
+    if not sys.stdin.isatty() and not args_string:
         stdin = sys.stdin.read().strip()
         if stdin:
             return json.loads(stdin)
