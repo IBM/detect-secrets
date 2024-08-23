@@ -20,7 +20,7 @@ setup(
         'Check out detect-secrets on `GitHub ' +
         '<https://github.com/IBM/detect-secrets>`_!'
     ),
-    url='hhttps://github.com/IBM/detect-secrets',
+    url='https://github.com/IBM/detect-secrets',
     keywords=['secret-management', 'pre-commit', 'security', 'entropy-checks'],
     install_requires=[
         'pyyaml',
