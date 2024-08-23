@@ -21,14 +21,15 @@ def maybe_get_existing_exclude(exclude_files, exclude_lines, old_baseline):
     if not old_baseline:
         return exclude_files, exclude_lines
 
-    previously_included = old_baseline.get("exclude", None)
+    previously_included = old_baseline.get('exclude', None)
     if not previously_included:
         return exclude_files, exclude_lines
 
-    files = "|".join(filter(None, (exclude_files, previously_included.get("files",None))))
-    lines = "|".join(filter(None, (exclude_lines, previously_included.get("lines",None))))
+    files = '|'.join(filter(None, (exclude_files, previously_included.get('files', None))))
+    lines = '|'.join(filter(None, (exclude_lines, previously_included.get('lines', None))))
 
     return files, lines
+
 
 def main(argv=None):
     if len(sys.argv) == 1:  # pragma: no cover
@@ -50,8 +51,8 @@ def main(argv=None):
             automaton, word_list_hash = build_automaton(args.word_list_file)
 
         _baseline = _get_existing_baseline(args.import_filename, args.string)
-        if args.plugins_reuse_excludes or (_baseline and _baseline.get("plugins_reuse_excludes", False)):
-            args.exclude_files, args.exclude_lines = maybe_get_existing_exclude(args.exclude_files, args.exclude_lines, _baseline)
+        if args.plugins_reuse_excludes or (_baseline and _baseline.get('plugins_reuse_excludes', False)):  # noqa: E501
+            args.exclude_files, args.exclude_lines = maybe_get_existing_exclude(args.exclude_files, args.exclude_lines, _baseline)  # noqa: E501
 
         # Plugins are *always* rescanned with fresh settings, because
         # we want to get the latest updates.

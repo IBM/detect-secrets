@@ -9,7 +9,7 @@ def add_plugins_reuse_excludes_flag(parser):
     parser.add_argument(
         '--plugins-reuse-excludes',
         action='store_true',
-        help='Force plugins to try re-using existing exclude contents.'
+        help='Force plugins to try re-using existing exclude contents.',
     )
 
 

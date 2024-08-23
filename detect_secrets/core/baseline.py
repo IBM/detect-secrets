@@ -35,7 +35,7 @@ def initialize(
     :param plugins: rules to initialize the SecretsCollection with.
 
     :type plugins_reuse_excludes: bool|None
-    :param plugins_reuse_excludes optional bool indicating whether plugins were forced to reuse excludes.
+    :param plugins_reuse_excludes optional bool whether plugins were forced to reuse excludes.
 
     :type exclude_files_regex: str|None
     :type exclude_lines_regex: str|None

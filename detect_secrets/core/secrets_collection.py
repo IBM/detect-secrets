@@ -344,7 +344,7 @@ class SecretsCollection:
         plugins_used = sorted(plugins_used, key=lambda x: x['name'])
 
         return {
-            **({"plugins_reuse_excludes": True} if self.plugins_reuse_excludes else {}),
+            **({'plugins_reuse_excludes': True} if self.plugins_reuse_excludes else {}),
             'generated_at': strftime('%Y-%m-%dT%H:%M:%SZ', gmtime()),
             'exclude': {
                 'files': self.exclude_files,

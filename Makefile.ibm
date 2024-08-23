@@ -62,9 +62,10 @@ trivy-scan-python-vulnerabilities:
 
 	# Generate a Pipfile.lock, Trivy does not auto-detect requirements-dev.txt (https://aquasecurity.github.io/trivy/v0.28.1/docs/vulnerability/detection/language/)
 	#./scripts/gen-pipfile.sh > Pipfile
-	#pipenv --python `which python3`
-	#pipenv lock
-	$(TRIVY) fs --exit-code 1 --ignore-unfixed --scanners vuln --file-patterns 'pip:requirements*.txt' ./
+	pipenv --python `which python3`
+	pipenv install -r requirements-dev.txt
+    pipenv lock
+	$(TRIVY) fs --exit-code 1 --ignore-unfixed --scanners vuln --file-patterns ./
 
 docker-quality-images:
 	for image_name in $(DOCKER_IMAGES_TO_SCAN) ; do												\
