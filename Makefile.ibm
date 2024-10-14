@@ -76,15 +76,24 @@ docker-test-images:
 	docker run -it $(DOCKER_DOMAIN_LOCAL)/detect-secrets-hook --version
 
 docker-build-images:
-	for dockerfile in Dockerfiles/*/*.Dockerfile; do                                            \
-		image_name=$$(echo -e $$(basename $${dockerfile}) | cut -d\. -f2);                      \
-		if [ "$${image_name}" == "detect-secrets-redhat-ubi" ]; then							\
-			image_name="detect-secrets:redhat-ubi";     								        \
-		elif [ "$${image_name}" == "detect-secrets-redhat-ubi-custom" ]; then				    \
-			image_name="detect-secrets:redhat-ubi-custom"; 										\
-		fi ;																					\
-		docker build -f "$${dockerfile}" -t $(DOCKER_DOMAIN_LOCAL)/$${image_name} .;  			\
-	done
+	for dockerfile in Dockerfiles/*/*.Dockerfile; do               																				\
+		image_name=$$(echo -e $$(basename $${dockerfile}) | cut -d\. -f2);																		\
+		case $${image_name} in    																												\
+			"detect-secrets-redhat-ubi")																										\
+				image_name="detect-secrets:redhat-ubi-amd64"; 																					\
+			;;  																																\
+			"detect-secrets-redhat-ubi-ppc64le")																								\
+				image_name="detect-secrets:redhat-ubi-ppc64le";     																			\
+				docker buildx create --use;																										\
+				docker buildx build --load --platform=linux/ppc64le -f "$${dockerfile}" -t $(DOCKER_DOMAIN_LOCAL)/$${image_name} .;  			\
+				continue																														\
+			;;														        																	\
+			"detect-secrets-redhat-ubi-custom")			  																						\
+				image_name="detect-secrets:redhat-ubi-custom";																					\
+			;;																																	\
+		esac;																																	\
+		docker build -f "$${dockerfile}" -t $(DOCKER_DOMAIN_LOCAL)/$${image_name} .;  															\
+	done;																																		\
 
 docker-login:
 	# @echo $(DOCKER_PASS_ART) | docker login -u $(DOCKER_USER_ART) --password-stdin $(DOCKER_REGISTRY_ART);
@@ -93,7 +102,8 @@ docker-login:
 docker-publish-images: docker-login
 	# Tagged UBI images in special way (since they are pre-tagged); these will be the frozen versions for UBI images
 	if [ -n "$(TRAVIS_TAG)" ]; then \
-		docker tag $(DOCKER_DOMAIN_LOCAL)/detect-secrets:redhat-ubi $(DOCKER_DOMAIN_LOCAL)/detect-secrets:$(subst +,.,$(TRAVIS_TAG))-redhat-ubi ;  \
+		docker tag $(DOCKER_DOMAIN_LOCAL)/detect-secrets:redhat-ubi-amd64 $(DOCKER_DOMAIN_LOCAL)/detect-secrets:$(subst +,.,$(TRAVIS_TAG))-redhat-ubi-amd64 ;  \
+		docker tag $(DOCKER_DOMAIN_LOCAL)/detect-secrets:redhat-ubi-ppc64le $(DOCKER_DOMAIN_LOCAL)/detect-secrets:$(subst +,.,$(TRAVIS_TAG))-redhat-ubi-ppc64le ;  \
 		docker tag $(DOCKER_DOMAIN_LOCAL)/detect-secrets:redhat-ubi-custom $(DOCKER_DOMAIN_LOCAL)/detect-secrets:$(subst +,.,$(TRAVIS_TAG))-redhat-ubi-custom ;  \
 	fi
 
@@ -107,10 +117,31 @@ docker-publish-images: docker-login
 	# Publish images to the different Registries; publish list is built within deploy target
 	for image_name in $(DOCKER_IMAGES_TO_PUBLISH) ; do  \
 		for registry in $(DOCKER_REGISTRIES) ; do   \
+			if [ $image_name == "detect-secrets:redhat-ubi" ] || [ $image_name == "detect-secrets:$(subst +,.,$(TRAVIS_TAG))-redhat-ubi" ]; then \
+				$(MAKE) docker-publish-manifest	\
+				IMAGE_NAME=$${image_name} DOCKER_REGISTRY=$${registry}; \
+				continue	\
+			fi	\
 			$(MAKE) docker-publish-image    \
 			IMAGE_NAME=$${image_name} DOCKER_REGISTRY=$${registry}; \
 		done   \
 	done
+
+docker-publish-manifest:
+	OG_IMAGE_NAME=${IMAGE_NAME};	\
+	$(MAKE) docker-publish-image IMAGE_NAME=${IMAGE_NAME}-amd64; \
+	$(MAKE) docker-publish-image IMAGE_NAME=${IMAGE_NAME}-ppc64le; \
+
+	export DOCKER_CLI_EXPERIMENTAL=enabled;	\
+	docker manifest create $(DOCKER_REGISTRY)/$(DOCKER_DOMAIN)/$(OG_IMAGE_NAME) $(DOCKER_REGISTRY)/$(DOCKER_DOMAIN)/$(OG_IMAGE_NAME)-amd64 $(DOCKER_REGISTRY)/$(DOCKER_DOMAIN)/$(OG_IMAGE_NAME)-ppc64le; \
+	docker manifest push $(DOCKER_REGISTRY)/$(DOCKER_DOMAIN)/$(OG_IMAGE_NAME); \
+
+
+	@echo "Signing image $(DOCKER_REGISTRY)/$(DOCKER_DOMAIN)/$(OG_IMAGE_NAME)"; \
+	$(COSIGN) sign --key env://COSIGN_PRIVATE_KEY --yes $(DOCKER_REGISTRY)/$(DOCKER_DOMAIN)/$(OG_IMAGE_NAME); \
+
+	@echo "Verifying image $(DOCKER_REGISTRY)/$(DOCKER_DOMAIN)/$(OG_IMAGE_NAME)"; \
+	$(COSIGN) verify --key env://COSIGN_PUBLIC_KEY "$(DOCKER_REGISTRY)/$(DOCKER_DOMAIN)/$(OG_IMAGE_NAME)";
 
 docker-publish-image:
 	docker tag $(DOCKER_DOMAIN_LOCAL)/$(IMAGE_NAME) $(DOCKER_REGISTRY)/$(DOCKER_DOMAIN)/$(IMAGE_NAME); \
