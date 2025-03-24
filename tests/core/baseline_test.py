@@ -33,12 +33,14 @@ class TestInitializeBaseline:
         path=['./test_data/files'],
         exclude_files_regex=None,
         scan_all_files=False,
+        diff_branch=None,
     ):
         return baseline.initialize(
             path,
             self.plugins,
             exclude_files_regex=exclude_files_regex,
             should_scan_all_files=scan_all_files,
+            diff_branch=diff_branch,
         ).json()
 
     @pytest.mark.parametrize(
@@ -183,6 +185,44 @@ class TestInitializeBaseline:
                 scan_all_files=True,
             )
         assert len(results.keys()) == 0
+
+    def test_diff_branch_nodiff(self):
+        results = self.get_results(path=['./test_data/files'], diff_branch='origin/master')
+
+        # No expected results, because differences
+        assert not results
+
+    def test_diff_branch_diff(self):
+        with mock_git_calls(
+            'detect_secrets.core.baseline.subprocess.check_output',
+            (
+                SubprocessMock(
+                    expected_input='git diff --name-only --diff-filter=ACMRTUX '
+                    + 'origin/master -- ./test_data/files',
+                    mocked_output=b'test_data/files/file_with_secrets.py\n',
+                ),
+            ),
+        ):
+            results = self.get_results(path=['./test_data/files'], diff_branch='origin/master')
+        assert len(results.keys()) == 1
+        assert len(results['test_data/files/file_with_secrets.py']) == 1
+
+    def test_diff_branch_diff2(self):
+        with mock_git_calls(
+            'detect_secrets.core.baseline.subprocess.check_output',
+            (
+                SubprocessMock(
+                    expected_input='git diff --name-only --diff-filter=ACMRTUX '
+                    + 'origin/master -- ./test_data/files',
+                    mocked_output=b'test_data/files/file_with_secrets.py\n'
+                    + b'test_data/files/tmp/file_with_secrets.py\n',
+                ),
+            ),
+        ):
+            results = self.get_results(path=['./test_data/files'], diff_branch='origin/master')
+        assert len(results.keys()) == 2
+        assert len(results['test_data/files/file_with_secrets.py']) == 1
+        assert len(results['test_data/files/tmp/file_with_secrets.py']) == 2
 
 
 class TestGetSecretsNotInBaseline:

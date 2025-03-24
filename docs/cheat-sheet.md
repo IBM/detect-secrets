@@ -76,6 +76,9 @@ detect-secrets scan file1 file2
 
 # Scan all files except for .gitignore
 detect-secrets scan --all-files
+
+# Scan only files that are tracked to git containing differences from the named branch
+detect-secrets scan --diff-branch diff_branch_name
 ```
 
 ### Ad-hoc scan on a single string
