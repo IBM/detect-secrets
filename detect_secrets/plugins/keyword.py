@@ -228,10 +228,21 @@ FOLLOWED_BY_QUOTES_AND_SEMICOLON_REGEX = re.compile(
         secret=SECRET,
     ),
 )
+FOLLOWED_BY_TO_AND_QUOTES_REGEX = re.compile(
+    # e.g. "password" to "secretpw"
+    # e.g. "password" to 123
+    r'({denylist})({quote}){whitespace}to{whitespace}({quote})?({secret})(\3)'.format(
+        denylist=DENYLIST_REGEX,
+        whitespace=OPTIONAL_WHITESPACE,
+        quote=QUOTE,
+        secret=SECRET
+    ),
+)
 DENYLIST_REGEX_TO_GROUP = {
     FOLLOWED_BY_COLON_REGEX: 4,
     FOLLOWED_BY_EQUAL_SIGNS_REGEX: 4,
     FOLLOWED_BY_QUOTES_AND_SEMICOLON_REGEX: 3,
+    FOLLOWED_BY_TO_AND_QUOTES_REGEX: 4,
 }
 GOLANG_DENYLIST_REGEX_TO_GROUP = {
     FOLLOWED_BY_COLON_EQUAL_SIGNS_REGEX: 4,
@@ -245,6 +256,7 @@ QUOTES_REQUIRED_DENYLIST_REGEX_TO_GROUP = {
     FOLLOWED_BY_COLON_QUOTES_REQUIRED_REGEX: 5,
     FOLLOWED_BY_EQUAL_SIGNS_QUOTES_REQUIRED_REGEX: 4,
     FOLLOWED_BY_QUOTES_AND_SEMICOLON_REGEX: 3,
+    FOLLOWED_BY_TO_AND_QUOTES_REGEX: 4,
 }
 QUOTES_REQUIRED_FILETYPES = {
     FileType.CLS,
