@@ -8,13 +8,20 @@ if sys.version_info.major == 2:
 from setuptools import find_packages
 from setuptools import setup
 
-from detect_secrets import VERSION
+import re
+from pathlib import Path
+
+def get_version():
+    init_path = Path(__file__).parent / "detect_secrets" / "__init__.py"
+    content = init_path.read_text()
+    match = re.search(r"^VERSION\s*=\s*['\"]([^'\"]+)['\"]", content, re.MULTILINE)
+    return match.group(1)
 
 
 setup(
     name='detect_secrets',
     packages=find_packages(exclude=(['test*', 'tmp*'])),
-    version=VERSION,
+    version=get_version(),
     description='Tool for detecting secrets in the codebase',
     long_description=(
         'Check out detect-secrets on `GitHub ' +
