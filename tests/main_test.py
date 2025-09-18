@@ -226,6 +226,7 @@ class TestMain:
         mock_merge_baseline.assert_called_once_with(
             {'key': 'value'},
             Any(dict),
+            False,
         )
 
     def test_reads_old_baseline_from_file(self, mock_merge_baseline):
@@ -243,6 +244,7 @@ class TestMain:
         mock_merge_baseline.assert_called_once_with(
             {'key': 'value'},
             Any(dict),
+            False,
         )
 
     def test_reads_non_existed_baseline_from_file(
