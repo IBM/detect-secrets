@@ -2,11 +2,11 @@ from contextlib import contextmanager
 
 import mock
 import pytest
+from testing.factories import potential_secret_factory
+from testing.mocks import mock_file_object
 
 from detect_secrets.core.constants import VerifiedResult
 from detect_secrets.plugins.base import BasePlugin
-from testing.factories import potential_secret_factory
-from testing.mocks import mock_file_object
 
 
 @pytest.mark.parametrize(

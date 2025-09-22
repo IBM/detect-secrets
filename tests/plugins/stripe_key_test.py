@@ -1,7 +1,7 @@
 import pytest
+from testing.mocks import mock_file_object
 
 from detect_secrets.plugins.stripe import StripeDetector
-from testing.mocks import mock_file_object
 
 
 class TestStripeKeyDetector:

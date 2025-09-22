@@ -3,11 +3,11 @@ from copy import deepcopy
 
 import mock
 import pytest
+from testing.baseline import baseline
 
 from detect_secrets.core import audit as audit_module
 from detect_secrets.core.report.constants import ReportExitCode
 from detect_secrets.main import main
-from testing.baseline import baseline
 
 
 @pytest.fixture

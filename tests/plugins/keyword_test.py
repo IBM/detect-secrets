@@ -2,10 +2,10 @@ import json
 
 import ahocorasick
 import pytest
+from testing.mocks import mock_file_object
 
 from detect_secrets.core.potential_secret import PotentialSecret
 from detect_secrets.plugins.keyword import KeywordDetector
-from testing.mocks import mock_file_object
 
 
 FOLLOWED_BY_COLON_EQUAL_SIGNS_RE = {

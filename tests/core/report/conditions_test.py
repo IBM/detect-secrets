@@ -2,6 +2,8 @@ from contextlib import contextmanager
 from copy import deepcopy
 
 import mock
+from testing.baseline import baseline
+from testing.baseline import baseline_filename
 
 from detect_secrets.core import audit
 from detect_secrets.core.report.conditions import fail_on_audited_real
@@ -9,8 +11,6 @@ from detect_secrets.core.report.conditions import fail_on_live
 from detect_secrets.core.report.conditions import fail_on_unaudited
 from detect_secrets.core.report.constants import ReportExitCode
 from detect_secrets.core.report.constants import ReportSecretType
-from testing.baseline import baseline
-from testing.baseline import baseline_filename
 
 
 class TestReportConditions:

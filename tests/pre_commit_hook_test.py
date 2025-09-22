@@ -3,15 +3,15 @@ from contextlib import contextmanager
 
 import mock
 import pytest
-
-from detect_secrets import pre_commit_hook
-from detect_secrets import VERSION
-from detect_secrets.core.potential_secret import PotentialSecret
 from testing.factories import secrets_collection_factory
 from testing.mocks import mock_git_calls
 from testing.mocks import mock_log as mock_log_base
 from testing.mocks import SubprocessMock
 from testing.util import get_regex_based_plugins
+
+from detect_secrets import pre_commit_hook
+from detect_secrets import VERSION
+from detect_secrets.core.potential_secret import PotentialSecret
 
 
 def assert_commit_result(command, return_code):
