@@ -10,10 +10,6 @@ DOCKER_REGISTRY_ICR := icr.io
 DOCKER_USER_ICR := iamapikey
 DOCKER_PASS_ICR := $(IBM_CLOUD_API_KEY)
 
-# DOCKER_REGISTRY_ART := txo-toolbox-team-docker-local.artifactory.swg-devops.com
-# DOCKER_USER_ART := $(ART_USER_ID)
-# DOCKER_PASS_ART := $(ART_API_KEY)
-
 DOCKER_IMAGES_TO_TAG := detect-secrets detect-secrets-hook
 DOCKER_IMAGES_TO_SCAN := detect-secrets detect-secrets-hook detect-secrets:redhat-ubi detect-secrets:redhat-ubi-custom
 DOCKER_IMAGES_TO_PUBLISH :=
@@ -87,7 +83,6 @@ docker-build-images:
 	done
 
 docker-login:
-	# @echo $(DOCKER_PASS_ART) | docker login -u $(DOCKER_USER_ART) --password-stdin $(DOCKER_REGISTRY_ART);
 	@echo $(DOCKER_PASS_ICR) | docker login -u $(DOCKER_USER_ICR) --password-stdin $(DOCKER_REGISTRY_ICR);
 
 docker-publish-images: docker-login
@@ -123,7 +118,6 @@ docker-publish-image:
 	$(COSIGN) verify --key env://COSIGN_PUBLIC_KEY "$(DOCKER_REGISTRY)/$(DOCKER_DOMAIN)/$(IMAGE_NAME)";
 
 cosign-login:
-	# @echo $(DOCKER_PASS_ART) | $(COSIGN) login -u $(DOCKER_USER_ART) --password-stdin $(DOCKER_REGISTRY_ART); \
 	@echo $(DOCKER_PASS_ICR) | $(COSIGN) login -u $(DOCKER_USER_ICR) --password-stdin $(DOCKER_REGISTRY_ICR);
 
 publish-cos:
