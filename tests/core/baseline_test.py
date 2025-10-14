@@ -613,6 +613,23 @@ class TestMergeResults:
             ],
         }
 
+    def test_old_results_completely_kept(self):
+        secretA = self.get_secret()
+        secretB = self.get_secret()
+
+        assert merge_results(
+            {
+                'filenameA': [secretA],
+            },
+            {
+                'filenameB': [secretB],
+            },
+            True,
+        ) == {
+            'filenameA': [secretA],
+            'filenameB': [secretB],
+        }
+
     def test_old_results_completely_overriden(self):
         secretA = self.get_secret()
         secretB = self.get_secret()

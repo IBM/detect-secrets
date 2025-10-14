@@ -645,6 +645,8 @@ class PluginOptions:
         self._add_opt_in_options()
         self._add_keyword_exclude()
         self._add_ghe_instance()
+        self._add_keep_old_results()
+        self._add_path_file()
 
         return self
 
@@ -787,4 +789,21 @@ class PluginOptions:
             '--ghe-instance',
             type=str,
             help='Instance URL for GHE i.e. github.ibm.com',
+        )
+
+    def _add_keep_old_results(self):
+        self.parser.add_argument(
+            '--keep-old-results',
+            action='store_true',
+            help='Keep files from old result that don\'t appear in the current scan',
+        )
+
+    def _add_path_file(self):
+        self.parser.add_argument(
+            '--path-file',
+            type=str,
+            help=(
+                'Read paths from this file.'
+                'If paths are pass into the cmdline they will be ignored'
+            ),
         )
