@@ -18,6 +18,6 @@ class TestTelegramTokenDetector:
     )
     def test_analyze(self, payload, should_flag):
         logic = TelegramBotTokenDetector()
-        output = logic.analyze_line(filename='mock_filename', line=payload)
+        output = logic.analyze_line(payload, 1, 'mock_filename')
 
         assert len(output) == int(should_flag)
