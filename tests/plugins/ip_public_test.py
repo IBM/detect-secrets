@@ -38,6 +38,10 @@ class TestIPPublicDetector:
                 ('172.16.0.1', False),
                 ('192.168.0.1', False),
                 ('169.254.169.254', False),
+                # 172.x boundary: 172.15 and 172.32 are public, 172.16-31 are private
+                ('172.15.0.1', True),
+                ('172.32.0.1', True),
+                ('172.160.0.1', True),
                 # Invalid IPv4 addresses
                 ('256.256.256.256', False),
                 ('1.2.3', False),
@@ -51,5 +55,5 @@ class TestIPPublicDetector:
         def test_analyze_line(self, payload, should_flag):
             logic = IPPublicDetector()
 
-            output = logic.analyze_line(filename='mock_filename', line=payload)
+            output = logic.analyze_line(payload, 1, 'mock_filename')
             assert len(output) == int(should_flag)

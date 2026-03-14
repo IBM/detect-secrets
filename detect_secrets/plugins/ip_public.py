@@ -27,7 +27,7 @@ class IPPublicDetector(RegexBasedDetector):
                 |127\.     # Exclude "127."
                 |10\.      # Exclude "10."
                 |169\.254\. # Exclude IPv4 Link Local Address (169.254.0.0/16)
-                |172\.(?:1[6-9]|2[0-9]|3[01])   # Exclude "172." with specific ranges
+                |172\.(?:1[6-9]|2[0-9]|3[01])\.   # Exclude "172.16-31." with specific ranges
             )
             (?:            # Non-capturing group for octets
                            # Match numbers 0-255 followed by dot, properly handle leading zeros
