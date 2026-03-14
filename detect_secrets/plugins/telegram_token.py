@@ -15,7 +15,7 @@ class TelegramBotTokenDetector(RegexBasedDetector):
 
     denylist = [
         # refs https://core.telegram.org/bots/api#authorizing-your-bot
-        re.compile(r'^\d{8,10}:[0-9A-Za-z_-]{35}$'),
+        re.compile(r'(?<![:\w])\d{8,10}:[0-9A-Za-z_-]{35}(?![0-9A-Za-z_-])'),
     ]
 
     def verify(self, token, *args, **kwargs):  # pragma: no cover
@@ -31,7 +31,7 @@ class TelegramBotTokenDetector(RegexBasedDetector):
 
         if response.status_code == 200:
             return VerifiedResult.VERIFIED_TRUE
+        if response.status_code == 401:
+            return VerifiedResult.VERIFIED_FALSE
 
-        # For unexpected status codes (e.g., 429/5xx), avoid
-        # incorrectly marking the token as invalid.
         return VerifiedResult.UNVERIFIED
