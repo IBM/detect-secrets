@@ -19,13 +19,19 @@ class TelegramBotTokenDetector(RegexBasedDetector):
     ]
 
     def verify(self, token, *args, **kwargs):  # pragma: no cover
-        response = requests.get(
-            'https://api.telegram.org/bot{}/getMe'.format(
-                token,
-            ),
-        )
-        return (
-            VerifiedResult.VERIFIED_TRUE
-            if response.status_code == 200
-            else VerifiedResult.VERIFIED_FALSE
-        )
+        try:
+            response = requests.get(
+                'https://api.telegram.org/bot{}/getMe'.format(
+                    token,
+                ),
+                timeout=5,
+            )
+        except requests.exceptions.RequestException:
+            return VerifiedResult.UNVERIFIED
+
+        if response.status_code == 200:
+            return VerifiedResult.VERIFIED_TRUE
+
+        # For unexpected status codes (e.g., 429/5xx), avoid
+        # incorrectly marking the token as invalid.
+        return VerifiedResult.UNVERIFIED
