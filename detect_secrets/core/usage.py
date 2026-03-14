@@ -618,6 +618,12 @@ class PluginOptions:
             help_text='Disables scans for GitHub credentials',
             filename='github_token',
         ),
+        PluginDescriptor(
+            classname='TelegramBotTokenDetector',
+            flag_text='--no-telegram-bot-token-scan',
+            help_text='Disables scans for Telegram bot tokens',
+            filename='telegram_token',
+        ),
     ]
     opt_in_plugins = [
         PluginDescriptor(
