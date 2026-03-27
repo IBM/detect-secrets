@@ -129,14 +129,16 @@ def get_box_user(
 
             return client.user().get().name
 
-        auth = JWTAuth(config=JWTConfig(
-            client_id=clientid,
-            client_secret=token,
-            enterprise_id=enterpriseid,
-            jwt_key_id=publickeyid,
-            private_key_passphrase=passphrase,
-            private_key=privatekey,
-        ))
+        auth = JWTAuth(
+            config=JWTConfig(
+                client_id=clientid,
+                client_secret=token,
+                enterprise_id=enterpriseid,
+                jwt_key_id=publickeyid,
+                private_key_passphrase=passphrase,
+                private_key=privatekey,
+            ),
+        )
         client = Client(auth)
 
         return client.users.get_user_me().name

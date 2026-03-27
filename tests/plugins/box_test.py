@@ -3,8 +3,8 @@ from mock import patch
 
 from detect_secrets.core.constants import VerifiedResult
 from detect_secrets.core.potential_secret import PotentialSecret
-from detect_secrets.plugins.box import BoxDetector
 from detect_secrets.plugins.box import BOX_SDK_FLAVOR
+from detect_secrets.plugins.box import BoxDetector
 from detect_secrets.plugins.box import find_other_factor
 from detect_secrets.plugins.box import get_box_user
 
