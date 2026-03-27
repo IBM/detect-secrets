@@ -9,7 +9,7 @@ certifi==2026.5.20
 pyyaml==6.0.3
 
 # Production dependencies (matching setup.py)
-boxsdk[jwt]==3.14.0
+boxsdk[jwt]==4.1.1
 pyahocorasick==2.3.1
 tabulate==0.10.0
 binaryornot==0.6.0

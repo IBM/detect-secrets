@@ -29,7 +29,7 @@ setup(
         'pyyaml>=6.0.3',
         'requests>=2.34.2',
         'urllib3>=2.7.0',
-        'boxsdk[jwt]>=3.14.0,<4.0.0',
+        'boxsdk[jwt]>=4.0.0,<5.0.0',
         'packaging>=20.0',
         'tabulate>=0.10.0',
         'binaryornot>=0.6.0',
