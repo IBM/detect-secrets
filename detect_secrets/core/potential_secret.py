@@ -59,6 +59,10 @@ class PotentialSecret:
         self.is_verified = is_verified
         self.verified_result = verified_result
         self.other_factors = {}
+        self.risk_score = None
+        self.risk_level = None
+        self.risk_reasons = None
+        self.context_tags = None
 
         # NOTE: Originally, we never wanted to keep the secret value in memory,
         #       after finding it in the codebase. However, to support verifiable
@@ -109,6 +113,12 @@ class PotentialSecret:
 
         if self.other_factors:
             attributes['other_factors'] = self.other_factors
+
+        if self.risk_score is not None:
+            attributes['risk_score'] = self.risk_score
+            attributes['risk_level'] = self.risk_level
+            attributes['risk_reasons'] = self.risk_reasons
+            attributes['context_tags'] = self.context_tags
 
         return attributes
 

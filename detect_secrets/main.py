@@ -6,6 +6,7 @@ from detect_secrets.core import baseline
 from detect_secrets.core.common import write_baseline_to_file
 from detect_secrets.core.log import log
 from detect_secrets.core.report import report
+from detect_secrets.core.risk_scoring import annotate_secrets
 from detect_secrets.core.secrets_collection import SecretsCollection
 from detect_secrets.core.usage import ParserBuilder
 from detect_secrets.plugins.common import initialize
@@ -178,7 +179,7 @@ def _perform_scan(args, plugins, automaton, word_list_hash):
     if args.import_filename:
         _add_baseline_to_exclude_files(args)
 
-    new_baseline = baseline.initialize(
+    new_secrets_collection = baseline.initialize(
         plugins=plugins,
         exclude_files_regex=args.exclude_files,
         exclude_lines_regex=args.exclude_lines,
@@ -189,7 +190,12 @@ def _perform_scan(args, plugins, automaton, word_list_hash):
         output_raw=args.output_raw,
         output_verified_false=args.output_verified_false,
         suppress_unscannable_file_warnings=args.suppress_unscannable_file_warnings,
-    ).format_for_baseline_output()
+    )
+
+    if getattr(args, 'risk_scoring', False):
+        annotate_secrets(new_secrets_collection)
+
+    new_baseline = new_secrets_collection.format_for_baseline_output()
 
     if old_baseline:
         new_baseline = baseline.merge_baseline(
