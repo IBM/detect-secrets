@@ -324,6 +324,10 @@ def merge_results(old_results, new_results):
             if 'is_secret' in old_secret and 'is_secret' not in new_secret:
                 new_secret['is_secret'] = old_secret['is_secret']
 
+            for key in ('risk_score', 'risk_level', 'risk_reasons', 'context_tags'):
+                if key in old_secret and key not in new_secret:
+                    new_secret[key] = old_secret[key]
+
     return new_results
 
 
