@@ -416,7 +416,17 @@ class SecretsCollection:
                 f.seek(0)
 
         except UnicodeDecodeError:
-            file_is_binary = is_binary(filename)
+            log.warning('UnicodeDecodeError encountered while scanning file: %s', filename)
+            try:
+                file_is_binary = is_binary(filename)
+            except Exception as e:
+                # Handle cases where is_binary() itself fails (e.g., chardet compatibility issues)
+                log.error(
+                    'Could not determine if file is binary (%s): %s',
+                    filename,
+                    str(e),
+                )
+                raise
 
             if not file_is_binary and not suppress_unscannable_file_warnings:
                 log.warning(
