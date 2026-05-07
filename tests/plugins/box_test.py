@@ -3,6 +3,7 @@ from mock import patch
 
 from detect_secrets.core.constants import VerifiedResult
 from detect_secrets.core.potential_secret import PotentialSecret
+from detect_secrets.plugins.box import BOX_SDK_FLAVOR
 from detect_secrets.plugins.box import BoxDetector
 from detect_secrets.plugins.box import find_other_factor
 from detect_secrets.plugins.box import get_box_user
@@ -38,11 +39,26 @@ class TestBoxDetector(object):
     @patch('detect_secrets.plugins.box.Client')
     def test_get_box_user(self, mock_box, mock_jwt):
         mock_box.return_value.user.return_value.get.return_value.name = 'Testy'
+        mock_box.return_value.users.get_user_me.return_value.name = 'Testy'
 
         assert get_box_user(
             BOX_CLIENT_ID, BOX_CLIENT_SECRET, BOX_ENTERPRISE_ID,
             BOX_PUBLIC_KEY_ID, BOX_PASSPHRASE, BOX_PRIVATE_KEY,
         ) == 'Testy'
+
+    @patch('detect_secrets.plugins.box.JWTAuth')
+    def test_get_box_user_auth_format(self, mock_jwt):
+        with patch('detect_secrets.plugins.box.Client'):
+            get_box_user(
+                BOX_CLIENT_ID, BOX_CLIENT_SECRET, BOX_ENTERPRISE_ID,
+                BOX_PUBLIC_KEY_ID, BOX_PASSPHRASE, BOX_PRIVATE_KEY,
+            )
+
+        kwargs = mock_jwt.call_args.kwargs
+        if BOX_SDK_FLAVOR == 'legacy':
+            assert kwargs['rsa_private_key_passphrase'] == BOX_PASSPHRASE.encode()
+        else:
+            assert 'config' in kwargs
 
     @patch('detect_secrets.plugins.box.JWTAuth')
     @patch('detect_secrets.plugins.box.Client')
@@ -58,6 +74,7 @@ class TestBoxDetector(object):
     @patch('detect_secrets.plugins.box.Client')
     def test_verify(self, mock_box, mock_jwt):
         mock_box.return_value.user.return_value.get.return_value.name = 'Testy'
+        mock_box.return_value.users.get_user_me.return_value.name = 'Testy'
 
         potential_secret = PotentialSecret('test box', 'test filename', BOX_CLIENT_SECRET)
 
