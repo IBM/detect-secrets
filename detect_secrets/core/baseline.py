@@ -371,7 +371,7 @@ def _get_git_tracked_files(rootdir='.'):
                 ],
                 stderr=fnull,
             )
-        for filename in git_files.decode('utf-8').split():
+        for filename in git_files.decode('utf-8').split('\n'):
             relative_path = util.get_relative_path_if_in_cwd(rootdir, filename)
             if relative_path:
                 output.append(relative_path)
