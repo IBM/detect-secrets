@@ -75,7 +75,7 @@ def initialize(
         elif os.path.isfile(element):
             files_to_scan.append(element)
         else:
-            log.error('detect-secrets: %s: No such file or directory', element)
+            log.error('detect-secrets: "%s": No such file or directory', element)
 
     if not files_to_scan:
         return output
@@ -262,7 +262,7 @@ def trim_baseline_of_removed_secrets(results, baseline, filelist):
     return updated
 
 
-def merge_baseline(old_baseline, new_baseline):
+def merge_baseline(old_baseline, new_baseline, keep_old_results=False):
     """Updates baseline to be compatible with the latest version of
     detect-secrets.
 
@@ -283,15 +283,17 @@ def merge_baseline(old_baseline, new_baseline):
     new_baseline['results'] = merge_results(
         old_baseline['results'],
         new_baseline['results'],
+        keep_old_results,
     )
 
     return new_baseline
 
 
-def merge_results(old_results, new_results):
+def merge_results(old_results, new_results, keep_old_results=False):
     """Update results in new baseline with audit information from old baseline.
+   
 
-    Secrets only appear in old baseline are ignored.
+    Secrets that only appear in old baseline are ignored. Unless keep_old_results is set True
 
     If secret exists in both old and new baselines, old baseline has audit (is_secret)
     info but new baseline does not, then audit info will be copied to new baseline.
@@ -302,15 +304,28 @@ def merge_results(old_results, new_results):
     :type new_results: dict
     :param new_results: results to replaced status quo
 
+    :type keep_old_results: bool
+    :param keep_old_results: if set true keep old results in new_results
+
     :rtype: dict
     """
     for filename, old_secrets in old_results.items():
-        if filename not in new_results:
+        next_iter = False
+        if not keep_old_results and filename not in new_results:
             continue
 
         old_secrets_mapping = {}
         for old_secret in old_secrets:
             old_secrets_mapping[old_secret['hashed_secret']] = old_secret
+
+            if keep_old_results and filename not in new_results:
+                if filename not in new_results:
+                    new_results[filename] = []
+                new_results[filename].append(old_secret)
+                next_iter = True
+
+        if next_iter:
+            continue
 
         for new_secret in new_results[filename]:
             if new_secret['hashed_secret'] not in old_secrets_mapping:

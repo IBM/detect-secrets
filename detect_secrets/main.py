@@ -1,3 +1,4 @@
+import errno
 import json
 import sys
 
@@ -178,13 +179,22 @@ def _perform_scan(args, plugins, automaton, word_list_hash):
     if args.import_filename:
         _add_baseline_to_exclude_files(args)
 
+    paths = args.path
+    if args.path_file:
+        try:
+            with open(args.path_file) as file:
+                paths = [line.rstrip() for line in file]
+        except FileNotFoundError:
+            print('Path File not found: {}'.format(args.path_file), file=sys.stderr)
+            sys.exit(errno.ENOENT)
+
     new_baseline = baseline.initialize(
         plugins=plugins,
         exclude_files_regex=args.exclude_files,
         exclude_lines_regex=args.exclude_lines,
         word_list_file=args.word_list_file,
         word_list_hash=word_list_hash,
-        path=args.path,
+        path=paths,
         should_scan_all_files=args.all_files,
         output_raw=args.output_raw,
         output_verified_false=args.output_verified_false,
@@ -195,6 +205,7 @@ def _perform_scan(args, plugins, automaton, word_list_hash):
         new_baseline = baseline.merge_baseline(
             old_baseline,
             new_baseline,
+            args.keep_old_results,
         )
 
     return new_baseline
