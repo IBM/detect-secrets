@@ -479,7 +479,7 @@ class SecretsCollection:
     def __str__(self):  # pragma: no cover
         return json.dumps(
             self.json(),
-            indent=2,
+            indent='\t',
             sort_keys=True,
         )
 

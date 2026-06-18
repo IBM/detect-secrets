@@ -338,7 +338,7 @@ def _create_old_baseline(has_result=True, use_private_key_scan=True):
     baseline['exclude_regex'] = ''
     return json.dumps(
         baseline,
-        indent=2,
+        indent='\t',
         sort_keys=True,
     )
 
@@ -359,7 +359,7 @@ def _create_baseline(has_result=True, use_private_key_scan=True, audited=True, v
     }
     return json.dumps(
         baseline,
-        indent=2,
+        indent='\t',
         sort_keys=True,
     )
 
