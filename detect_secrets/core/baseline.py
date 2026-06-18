@@ -24,6 +24,7 @@ def initialize(
     output_raw=False,
     output_verified_false=False,
     suppress_unscannable_file_warnings=False,
+    diff_branch=None,
 ):
     """Scans the entire codebase for secrets, and returns a
     SecretsCollection object.
@@ -49,6 +50,10 @@ def initialize(
     :type suppress_unscannable_file_warnings   boolean
     :param suppress_unscannable_file_warnings: whether or not to suppress unscannable file warnings
 
+    :type diff_branch: str|None
+    :param diff_branch: optional name of branch to check for
+    differences against in determining files to scan.
+
     :rtype: SecretsCollection
     """
     output = SecretsCollection(
@@ -67,6 +72,10 @@ def initialize(
             if should_scan_all_files:
                 files_to_scan.extend(
                     _get_files_recursively(element),
+                )
+            elif diff_branch is not None:
+                files_to_scan.extend(
+                    _get_git_tracked_diff_files(element, diff_branch),
                 )
             else:
                 files_to_scan.extend(
@@ -375,6 +384,47 @@ def _get_git_tracked_files(rootdir='.'):
             relative_path = util.get_relative_path_if_in_cwd(rootdir, filename)
             if relative_path:
                 output.append(relative_path)
+    except subprocess.CalledProcessError:
+        pass
+    return output
+
+
+def _get_git_tracked_diff_files(rootdir='.', diff_branch=None):
+    """On incremental builds it is only necessary to scan the files that
+    have changed.  This will allow a scan of files that have differences
+    from the named branch. The filter does not list filess that are
+    deleted because it is impossible to scan them now.
+
+    :type rootdir: str
+    :param rootdir: root directory of where you want to list files from
+
+    :type diff_branch: str
+    :param diff_branch: name of branch to check diferences from.
+    'test' would find files with differences between the current branch
+    and the local test branch.
+    'origin/main' would find files with differences between the current
+    branch and the remote main branch.
+
+    :rtype: set|None
+    :returns: filepaths to files with differences from the diff_branch
+    which git currently tracks (locally)
+    """
+    output = []
+    try:
+        with open(os.devnull, 'w') as fnull:
+            git_files = subprocess.check_output(
+                [
+                    'git',
+                    'diff',
+                    '--name-only',
+                    '--diff-filter=ACMRTUX',
+                    diff_branch,
+                    '--', rootdir,
+                ],
+                stderr=fnull,
+            )
+        for filename in git_files.decode('utf-8').split():
+            output.append(filename)
     except subprocess.CalledProcessError:
         pass
     return output

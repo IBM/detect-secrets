@@ -189,6 +189,7 @@ def _perform_scan(args, plugins, automaton, word_list_hash):
         output_raw=args.output_raw,
         output_verified_false=args.output_verified_false,
         suppress_unscannable_file_warnings=args.suppress_unscannable_file_warnings,
+        diff_branch=args.diff_branch,
     ).format_for_baseline_output()
 
     if old_baseline:
@@ -206,7 +207,8 @@ def _get_existing_baseline(import_filename):
         try:
             return _read_from_file(import_filename[0])
         except FileNotFoundError as fnf_error:
-            if fnf_error.errno == 2:  # create new baseline if not existed
+            if fnf_error.errno == 2 or fnf_error.errno == 129:
+                # create new baseline if not existed, 129 is for z/OS
                 return None
             else:  # throw exception for other cases
                 print(
