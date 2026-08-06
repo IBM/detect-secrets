@@ -23,7 +23,7 @@ monotonic==1.6
 pre-commit==4.0.1
 pytest==8.3.4
 responses==0.25.3
-tox-pip-extensions==1.7.1
+tox-pip-extensions==1.6.0
 tox==4.23.2
 unidiff==0.7.5
 
