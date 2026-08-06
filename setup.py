@@ -22,15 +22,18 @@ setup(
     ),
     url='hhttps://github.com/IBM/detect-secrets',
     keywords=['secret-management', 'pre-commit', 'security', 'entropy-checks'],
+    python_requires='>=3.8',
     install_requires=[
-        'pyyaml',
-        'requests',
-        'urllib3>2.4.0',
-        'boxsdk[jwt]<4.0.0',
-        'packaging',
-        'tabulate',
-        'binaryornot',
-        'chardet>=3.0.2,<7.0.0',
+        # Minimum versions set to the secure versions validated during CVE remediation.
+        # Exact pins live in requirements-dev.txt for reproducible dev/CI environments.
+        'pyyaml>=6.0.3',
+        'requests>=2.34.2',
+        'urllib3>=2.7.0',
+        'boxsdk[jwt]>=3.14.0,<4.0.0',
+        'packaging>=26.2',
+        'tabulate>=0.10.0',
+        'binaryornot>=0.6.0',
+        'chardet>=6.0.0',
     ],
     extras_require={
         'word_list': [
