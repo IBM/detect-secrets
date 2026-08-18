@@ -282,3 +282,80 @@ class TestBoxDetector(object):
         assert find_other_factor(
             content, prefix_regex, factor_keyword_regex, factor_regex,
         ) == expected_result
+
+    def test_import_paths_and_validation(self):
+        import sys
+        import importlib
+        from mock import MagicMock, patch
+
+        original_box_module = sys.modules.get('detect_secrets.plugins.box')
+
+        # 1. Test legacy (v4) import path
+        mock_boxsdk = MagicMock()
+        mock_boxsdk.Client = MagicMock()
+        mock_boxsdk.JWTAuth = MagicMock()
+        
+        with patch.dict('sys.modules', {'boxsdk': mock_boxsdk, 'box_sdk_gen': None}):
+            if 'detect_secrets.plugins.box' in sys.modules:
+                del sys.modules['detect_secrets.plugins.box']
+            import detect_secrets.plugins.box as dynamic_box
+
+            assert dynamic_box.BOX_SDK_FLAVOR == 'legacy'
+            
+            dynamic_box.get_box_user(
+                BOX_CLIENT_ID, BOX_CLIENT_SECRET, BOX_ENTERPRISE_ID,
+                BOX_PUBLIC_KEY_ID, BOX_PASSPHRASE, BOX_PRIVATE_KEY
+            )
+            mock_boxsdk.JWTAuth.assert_called_once_with(
+                client_id=BOX_CLIENT_ID,
+                client_secret=BOX_CLIENT_SECRET,
+                enterprise_id=BOX_ENTERPRISE_ID,
+                jwt_key_id=BOX_PUBLIC_KEY_ID,
+                rsa_private_key_passphrase=BOX_PASSPHRASE.encode(),
+                rsa_private_key_data=BOX_PRIVATE_KEY,
+            )
+
+        # 2. Test generated (v10) import path
+        mock_box_sdk_gen = MagicMock()
+        mock_box_sdk_gen.BoxClient = MagicMock()
+        mock_box_sdk_gen.BoxJWTAuth = MagicMock()
+        mock_box_sdk_gen.JWTConfig = MagicMock()
+
+        with patch.dict('sys.modules', {'boxsdk': None, 'box_sdk_gen': mock_box_sdk_gen}):
+            if 'detect_secrets.plugins.box' in sys.modules:
+                del sys.modules['detect_secrets.plugins.box']
+            import detect_secrets.plugins.box as dynamic_box
+
+            assert dynamic_box.BOX_SDK_FLAVOR == 'generated'
+
+            dynamic_box.get_box_user(
+                BOX_CLIENT_ID, BOX_CLIENT_SECRET, BOX_ENTERPRISE_ID,
+                BOX_PUBLIC_KEY_ID, BOX_PASSPHRASE, BOX_PRIVATE_KEY
+            )
+            mock_box_sdk_gen.JWTConfig.assert_called_once_with(
+                client_id=BOX_CLIENT_ID,
+                client_secret=BOX_CLIENT_SECRET,
+                enterprise_id=BOX_ENTERPRISE_ID,
+                jwt_key_id=BOX_PUBLIC_KEY_ID,
+                private_key_passphrase=BOX_PASSPHRASE,
+                private_key=BOX_PRIVATE_KEY,
+            )
+
+        if original_box_module:
+            sys.modules['detect_secrets.plugins.box'] = original_box_module
+
+    def test_live_integration_verify_constructs_real_jwt_auth(self):
+        from boxsdk import JWTAuth, Client
+        import pytest
+
+        with pytest.raises((ValueError, Exception)):
+            auth = JWTAuth(
+                client_id=BOX_CLIENT_ID,
+                client_secret=BOX_CLIENT_SECRET,
+                enterprise_id=BOX_ENTERPRISE_ID,
+                jwt_key_id=BOX_PUBLIC_KEY_ID,
+                rsa_private_key_passphrase=BOX_PASSPHRASE.encode(),
+                rsa_private_key_data=BOX_PRIVATE_KEY,
+            )
+            client = Client(auth)
+            client.user().get()
