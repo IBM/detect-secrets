@@ -33,7 +33,7 @@ setup(
         'packaging>=20.0',
         'tabulate>=0.10.0',
         'binaryornot>=0.6.0',
-        'chardet>=6.0.0',
+        'chardet>=6.0.0,<7.0.0',
     ],
     extras_require={
         'word_list': [
