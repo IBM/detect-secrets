@@ -1,14 +1,5 @@
-try:
-    from boxsdk import Client
-    from boxsdk import JWTAuth
-
-    BOX_SDK_FLAVOR = 'legacy'
-except ImportError:
-    from box_sdk_gen import BoxClient as Client
-    from box_sdk_gen import BoxJWTAuth as JWTAuth
-    from box_sdk_gen import JWTConfig
-
-    BOX_SDK_FLAVOR = 'generated'
+from boxsdk import Client
+from boxsdk import JWTAuth
 
 from .base import RegexBasedDetector
 from detect_secrets.core.constants import VerifiedResult
@@ -115,33 +106,17 @@ def get_box_user(
     clientid, token, enterpriseid,
     publickeyid, passphrase, privatekey,
 ):
+    auth = JWTAuth(
+        client_id=clientid,
+        client_secret=token,
+        enterprise_id=enterpriseid,
+        jwt_key_id=publickeyid,
+        rsa_private_key_passphrase=passphrase.encode(),
+        rsa_private_key_data=privatekey,
+    )
     try:
-        if BOX_SDK_FLAVOR == 'legacy':
-            auth = JWTAuth(
-                client_id=clientid,
-                client_secret=token,
-                enterprise_id=enterpriseid,
-                jwt_key_id=publickeyid,
-                rsa_private_key_passphrase=passphrase.encode(),
-                rsa_private_key_data=privatekey,
-            )
-            client = Client(auth)
-
-            return client.user().get().name
-
-        auth = JWTAuth(
-            config=JWTConfig(
-                client_id=clientid,
-                client_secret=token,
-                enterprise_id=enterpriseid,
-                jwt_key_id=publickeyid,
-                private_key_passphrase=passphrase,
-                private_key=privatekey,
-            ),
-        )
         client = Client(auth)
-
-        return client.users.get_user_me().name
+        return client.user().get().name
     except Exception:
         return None
 
