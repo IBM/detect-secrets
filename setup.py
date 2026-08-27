@@ -1,8 +1,10 @@
 import sys
-if sys.version_info.major == 2:
+if sys.version_info < (3, 10):
     sys.exit(
-        'Sorry, Python 2 is no longer supported by detect-secrets. Refer to' +
-        ' http://ibm.biz/upgrade-to-py3 for instructions on upgraing to Python 3.',
+        'detect-secrets requires Python 3.10 or later. '
+        'Python 3.9 cannot install CVE-clean versions of requests (>=2.33) '
+        'or urllib3 (>=2.7.0). Use pyenv to manage multiple Python versions: '
+        'https://github.com/pyenv/pyenv',
     )
 
 from setuptools import find_packages
@@ -22,7 +24,7 @@ setup(
     ),
     url='hhttps://github.com/IBM/detect-secrets',
     keywords=['secret-management', 'pre-commit', 'security', 'entropy-checks'],
-    python_requires='>=3.8',
+    python_requires='>=3.10',
     install_requires=[
         # Minimum versions set to the secure versions validated during CVE remediation.
         # Exact pins live in requirements-dev.txt for reproducible dev/CI environments.
@@ -51,6 +53,8 @@ setup(
     },
     classifiers=[
         'Programming Language :: Python :: 3',
+        'Programming Language :: Python :: 3.10',
+        'Programming Language :: Python :: 3.11',
         'License :: OSI Approved :: Apache Software License',
         'Intended Audience :: Developers',
         'Topic :: Software Development',
