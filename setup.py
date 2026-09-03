@@ -27,14 +27,15 @@ setup(
     python_requires='>=3.10',
     install_requires=[
         # Minimum versions set to the secure versions validated during CVE remediation.
+        # Upper bounds set to next major to avoid silent breakage on major upgrades.
         # Exact pins live in requirements-dev.txt for reproducible dev/CI environments.
-        'pyyaml>=6.0.3',
-        'requests>=2.34.2',
-        'urllib3>=2.7.0',
+        'pyyaml>=6.0.3,<7',
+        'requests>=2.34.2,<3',
+        'urllib3>=2.7.0,<3',
         'boxsdk[jwt]>=3.14.0,<4.0.0',
         'packaging>=20.0',
-        'tabulate>=0.10.0',
-        'binaryornot>=0.6.0',
+        'tabulate>=0.10.0,<0.11',
+        'binaryornot>=0.6.0,<0.7',
         'chardet>=6.0.0,<7.0.0',
     ],
     extras_require={
