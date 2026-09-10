@@ -1,20 +1,32 @@
-pip>=21.1
-urllib3>2.4.0
-coverage>=6.0b1
-certifi>=2024.7.4
-flake8
-mock
-monotonic
-pre-commit
-pytest
-pyyaml
-responses
-tox-pip-extensions
-tox>=3.8
-unidiff
-ibm_db
-boxsdk[jwt]<4.0.0
-pyahocorasick
-tabulate
-binaryornot
-chardet>=3.0.2,<7.0.0
+# Development Dependencies - Pinned Versions
+# Updated: 2026-05-28
+# Minimum Python: 3.10 (requests>=2.33 and urllib3>=2.7.0 require Python 3.10+)
+# These versions are pinned for reproducible development environments
+
+# Core tools (matching production image)
+pip==26.1.1
+requests==2.34.2
+urllib3==2.7.0
+certifi==2026.5.20
+pyyaml==6.0.3
+
+# Production dependencies (matching setup.py)
+boxsdk[jwt]==3.14.0
+pyahocorasick==2.3.1
+tabulate==0.10.0
+binaryornot==0.6.0
+chardet==6.0.0.post1
+
+# Development-only tools (pinned to latest stable)
+coverage==7.6.10
+flake8==7.3.0
+mock==5.1.0
+monotonic==1.6
+pre-commit==4.0.1
+pytest==8.3.4
+responses==0.25.3
+tox>=3.8,<4
+unidiff==0.7.5
+
+# Database driver (for testing)
+ibm-db==3.2.3

@@ -190,8 +190,8 @@ Then start the debugger from your root-level main file.
 This project is written in Python. Here are the dependencies needed to run the tests:
 
 -   `python` The version can be installed using an utility like pyenv (instructions below) or your os package manager
-    -   `3.8`
-    -   `3.9`
+    -   `3.10`
+    -   `3.11`
 -   `tox` installed via pip or your os package manager
 -   `make`
 -   `pre-commit`
@@ -201,10 +201,10 @@ This project is written in Python. Here are the dependencies needed to run the t
 ### Running the Entire Test Suite
 
 You can run the test suite in the interpreter of your choice (in this example,
-`py38`) by doing:
+`py311`) by doing:
 
 ```bash
-tox -e py38
+tox -e py311
 ```
 
 For a list of supported interpreters, check out `envlist` in `tox.ini`.
