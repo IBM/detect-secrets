@@ -23,7 +23,7 @@ flake8==7.3.0
 mock==5.1.0
 monotonic==1.6
 pre-commit==4.0.1
-pytest==8.3.4
+pytest==9.0.3
 responses==0.25.3
 tox>=3.8,<4
 unidiff==0.7.5
