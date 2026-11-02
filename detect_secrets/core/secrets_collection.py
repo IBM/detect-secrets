@@ -266,7 +266,7 @@ class SecretsCollection:
 
             return True
         except IOError:
-            file_is_binary = is_binary(filename)
+            file_is_binary = os.path.exists(filename) and is_binary(filename)
 
             if not file_is_binary and not suppress_unscannable_file_warnings:
                 log.warning(
@@ -416,7 +416,7 @@ class SecretsCollection:
                 f.seek(0)
 
         except UnicodeDecodeError:
-            file_is_binary = is_binary(filename)
+            file_is_binary = os.path.exists(filename) and is_binary(filename)
 
             if not file_is_binary and not suppress_unscannable_file_warnings:
                 log.warning(

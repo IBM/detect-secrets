@@ -13,13 +13,13 @@ deploy:
       on:
           all_branches: true
           # only build docker image and push once
-          condition: $TOXENV = py39
+          condition: $TOXENV = py311
           # only deploy when pushing to gh repo
           repo: IBM/detect-secrets
 matrix:
     include:
-        - env: TOXENV=py39
-          python: 3.9.18
+        - env: TOXENV=py311
+          python: 3.11
 before_install:
     - echo -e "machine github.com\n  login $GH_ACCESS_TOKEN" >> ~/.netrc # Login to GitHub
     - echo -e "machine github.ibm.com\n  login $GHE_ACCESS_TOKEN" >> ~/.netrc # Login to GitHub Enterprise
