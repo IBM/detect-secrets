@@ -7,7 +7,7 @@
 pip==26.1.1
 requests==2.34.2
 urllib3==2.7.0
-certifi==2026.5.20
+certifi==2026.10.18
 pyyaml==6.0.3
 
 # Production dependencies (matching setup.py)
