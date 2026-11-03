@@ -340,7 +340,7 @@ def format_baseline_for_output(baseline):
 
     return json.dumps(
         baseline,
-        indent=2,
+        indent='\t',
         sort_keys=True,
         separators=(',', ': '),
     )

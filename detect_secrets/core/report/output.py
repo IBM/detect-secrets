@@ -70,7 +70,7 @@ def print_json_report(
     if fail_on_audited_real:
         secrets += audited_real_secrets
 
-    print(json.dumps({'stats': stats, 'secrets': secrets}, indent=4))
+    print(json.dumps({'stats': stats, 'secrets': secrets}, indent='\t'))
 
 
 def print_table_report(
