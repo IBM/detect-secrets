@@ -205,7 +205,8 @@ class ScanOptions:
         self._add_initialize_baseline_argument()\
             ._add_adhoc_scanning_argument()\
             ._add_output_raw_argument()\
-            ._add_suppress_unscannable_file_warnings()
+            ._add_suppress_unscannable_file_warnings()\
+            ._add_risk_scoring_argument()
 
         PluginOptions(self.parser).add_arguments()
 
@@ -287,6 +288,14 @@ class ScanOptions:
 
     def _add_suppress_unscannable_file_warnings(self):
         add_suppress_unscannable_file_warnings(self.parser)
+        return self
+
+    def _add_risk_scoring_argument(self):
+        self.parser.add_argument(
+            '--risk-scoring',
+            action='store_true',
+            help='Add risk scoring metadata to each detected secret.',
+        )
         return self
 
 
