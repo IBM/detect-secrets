@@ -55,9 +55,11 @@ class TestInitializeBaseline:
     def test_basic_usage(self, path):
         results = self.get_results(path=path)
 
-        assert len(results.keys()) == 2
+        assert len(results.keys()) == 4
         assert len(results['test_data/files/file_with_secrets.py']) == 1
         assert len(results['test_data/files/tmp/file_with_secrets.py']) == 2
+        assert len(results['test_data/files/file with secrets.py']) == 2
+        assert len(results['test_data/files/tmp/file with secrets.py']) == 1
 
     @pytest.mark.parametrize(
         'path',
@@ -92,8 +94,8 @@ class TestInitializeBaseline:
 
         assert len(results['test_data/files/file_with_secrets.py']) == 1
         assert len(results['test_data/files/tmp/file_with_secrets.py']) == 2
-        assert 'test_data/files/file_with_secrets.py' in results
-        assert 'test_data/files/tmp/file_with_secrets.py' in results
+        assert 'test_data/files/file with secrets.py' not in results
+        assert 'test_data/files/tmp/file with secrets.py' not in results
 
     def test_with_multiple_non_existent_files(self):
         with mock.patch(
@@ -123,20 +125,25 @@ class TestInitializeBaseline:
         assert 'test_data/files/file_with_secrets.py' in results
         assert 'test_data/files/tmp/file_with_secrets.py' in results
         assert 'test_data/files/file_with_no_secrets.py' not in results
+        assert 'test_data/files/file with secrets.py' in results
+        assert 'test_data/files/tmp/file with secrets.py' in results
         assert 'non-existent-file.B' not in results
 
     def test_exclude_regex(self):
         results = self.get_results(exclude_files_regex='tmp*')
 
-        assert len(results.keys()) == 1
+        assert len(results.keys()) == 2
         assert 'test_data/files/file_with_secrets.py' in results
+        assert 'test_data/files/file with secrets.py' in results
 
     def test_exclude_regex_at_root_level(self):
         results = self.get_results(exclude_files_regex='file_with_secrets.py')
 
         # All files_with_secrets.py should be ignored, both at the root
         # level, and the nested file in tmp.
-        assert not results
+        assert len(results.keys()) == 2
+        assert 'test_data/files/file with secrets.py' in results
+        assert 'test_data/files/tmp/file with secrets.py' in results
 
     def test_no_files_in_git_repo(self):
         with mock_git_calls(
@@ -170,7 +177,7 @@ class TestInitializeBaseline:
             path=['test_data/files'],
             scan_all_files=True,
         )
-        assert len(results.keys()) == 2
+        assert len(results.keys()) == 4
 
     def test_scan_all_files_with_bad_symlinks(self):
         with mock.patch(
