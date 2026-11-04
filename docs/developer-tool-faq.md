@@ -359,19 +359,36 @@ If you are using the [husky](https://github.com/typicode/husky) library to manag
 
 ### How do I use inline allowlisting?
 
-The tool supports the following inline allowlisting syntax.
+The tool supports inline allowlisting by adding a pragma comment to the flagged line. **A space is required between the content and the comment.**
 
-> **Note: a space is needed between the original line content and the comment**
+#### Inline pragma — non-Markdown files (`.sh`, `.py`, `.yaml`, etc.)
+
+For code files, add the pragma comment on the same line as the flagged content:
 
 ```bash
-secret # pragma: allowlist secret
+export AWS_SECRET_ACCESS_KEY="<value-from-secret>" # pragma: allowlist secret
+```
+
+Other supported comment styles:
+
+```
 secret // pragma: allowlist secret
 secret /* pragma: allowlist secret */
 secret ' pragma: allowlist secret
 secret -- pragma: allowlist secret
-secret <!-- pragma: allowlist secret -->
-secret <!-- # pragma: allowlist secret -->
 ```
+
+#### Inline pragma — Markdown files (`.md`)
+
+The `# pragma: allowlist secret` syntax **does not work inside fenced code blocks** in Markdown files — the scanner treats it as literal text, not a directive. Two alternatives exist depending on where the flagged content appears:
+
+**Outside a code block** — use an HTML comment on the same line:
+
+```
+This is a token: `my-secret-value` <!-- pragma: allowlist secret -->
+```
+
+**Inside a fenced code block** — inline pragmas do not work. Use the `.secrets.baseline` audit approach instead (run `detect-secrets audit .secrets.baseline` and mark the detected entry as a false positive).
 
 ### Why does my scan get stuck
 
