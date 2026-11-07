@@ -618,6 +618,12 @@ class PluginOptions:
             help_text='Disables scans for GitHub credentials',
             filename='github_token',
         ),
+        PluginDescriptor(
+            classname='IPPublicDetector',
+            flag_text='--no-ip-public-scan',
+            help_text='Disables scans for public IPv4 addresses',
+            filename='ip_public',
+        ),
     ]
     opt_in_plugins = [
         PluginDescriptor(
