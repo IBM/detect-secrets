@@ -143,6 +143,22 @@ FOLLOWED_BY_QUOTES_AND_SEMICOLON_RE = {
         ],
     },
 }
+FOLLOWED_BY_TO_AND_QUOTES_RE = {
+    'negatives': {
+        'quotes_required': [
+            '"password" to ""',  # Nothing in the quotes
+            '"password" to "fake"',  # 'fake' in the secret
+            '"apikey" to "${FOO}"',  # Starts with ${ and ends with }
+            'password to hopenobodyfindsthisone',  # no quotes
+        ],
+    },
+    'positives': {
+        'quotes_required': [
+            '"password" to "m{{h}o)p${e]nob(ody[finds>-_$#thisone}}"',
+            '"apikey" to "m{{h}o)p${e]nob(ody[finds>-_$#thisone}}"',
+        ],
+    },
+}
 
 QUOTES_REQUIRED_FILE_EXTENSIONS = (
     '.cls',
@@ -163,6 +179,7 @@ STANDARD_NEGATIVES.extend(
     + FOLLOWED_BY_EQUAL_SIGNS_RE.get('negatives').get('quotes_required')
     + FOLLOWED_BY_EQUAL_SIGNS_RE.get('negatives').get('quotes_not_required')
     + FOLLOWED_BY_QUOTES_AND_SEMICOLON_RE.get('negatives').get('quotes_required')
+    + FOLLOWED_BY_TO_AND_QUOTES_RE.get('negatives').get('quotes_required')
     + FOLLOWED_BY_EQUAL_SIGNS_OPTIONAL_BRACKETS_OPTIONAL_AT_SIGN_QUOTES_REQUIRED_REGEX.get(
         'negatives',
     ).get('quotes_required'),
@@ -172,6 +189,7 @@ STANDARD_POSITIVES.extend(
     + FOLLOWED_BY_COLON_RE.get('positives').get('quotes_not_required')
     + FOLLOWED_BY_EQUAL_SIGNS_RE.get('positives').get('quotes_required')
     + FOLLOWED_BY_EQUAL_SIGNS_RE.get('positives').get('quotes_not_required')
+    + FOLLOWED_BY_TO_AND_QUOTES_RE.get('positives').get('quotes_required')
     + FOLLOWED_BY_QUOTES_AND_SEMICOLON_RE.get('positives').get('quotes_required'),
 )
 
@@ -233,6 +251,7 @@ class TestKeywordDetector:
                 FOLLOWED_BY_COLON_RE.get('positives').get('quotes_required')
                 + FOLLOWED_BY_EQUAL_SIGNS_RE.get('positives').get('quotes_required')
                 + FOLLOWED_BY_QUOTES_AND_SEMICOLON_RE.get('positives').get('quotes_required')
+                + FOLLOWED_BY_TO_AND_QUOTES_RE.get('positives').get('quotes_required')
             ) for file_extension in QUOTES_REQUIRED_FILE_EXTENSIONS
         ),
     )
