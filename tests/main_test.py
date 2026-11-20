@@ -1,3 +1,4 @@
+import hashlib
 import json
 import shlex
 import textwrap
@@ -331,6 +332,46 @@ class TestMain:
                 file_writer.call_args[1]['data']['exclude']['files']
                 == expected_regex
             )
+
+    def test_word_list_from_old_baseline_used_with_update_flag(self):
+        word_list_hash = hashlib.sha1('c3vwzxig'.encode('utf-8')).hexdigest()
+        with mock_stdin(), mock.patch(
+            'detect_secrets.main._read_from_file',
+            return_value={
+                'plugins_used': [
+                    {
+                        'base64_limit': 4.5,
+                        'name': 'Base64HighEntropyString',
+                    },
+                ],
+                'results': {},
+                'version': VERSION,
+                'exclude': {
+                    'files': None,
+                    'lines': None,
+                },
+                'word_list': {
+                    'file': 'test_data/word_list.txt',
+                    'hash': word_list_hash,
+                },
+            },
+        ), mock.patch(
+            # We don't want to be creating a file during test
+            'detect_secrets.main.write_baseline_to_file',
+        ) as file_writer:
+            assert main(
+                'scan --no-verify --update old_baseline_file '
+                'test_data/files/file_with_secrets.py'.split(),
+            ) == 0
+
+        data = file_writer.call_args[1]['data']
+        assert data['word_list'] == {
+            'file': 'test_data/word_list.txt',
+            'hash': word_list_hash,
+        }
+        # The only Base64 string in the file contains a word from the word
+        # list, so it should not be reported.
+        assert data['results'] == {}
 
     @pytest.mark.parametrize(
         'plugins_used, plugins_overwriten, plugins_wrote',

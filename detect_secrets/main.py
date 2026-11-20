@@ -154,6 +154,17 @@ def _perform_scan(args, plugins, automaton, word_list_hash):
     :rtype: dict
     """
     old_baseline = _get_existing_baseline(args.import_filename)
+    if (
+        old_baseline
+        and not args.word_list_file
+        and (old_baseline.get('word_list') or {}).get('file')
+    ):
+        # Reuse the baseline's word list. Build its automaton before the
+        # plugins are merged below, so they ignore its words the same way
+        # they do with `--word-list`, and the baseline keeps its hash.
+        args.word_list_file = old_baseline['word_list']['file']
+        automaton, word_list_hash = build_automaton(args.word_list_file)
+
     if old_baseline:
         plugins = initialize.merge_plugins_from_baseline(
             _get_plugins_from_baseline(old_baseline, tuple(args.plugin_filenames)),
@@ -169,9 +180,6 @@ def _perform_scan(args, plugins, automaton, word_list_hash):
 
         if not args.exclude_lines and old_baseline.get('exclude'):
             args.exclude_lines = old_baseline['exclude']['lines']
-
-        if not args.word_list_file and old_baseline.get('word_list'):
-            args.word_list_file = old_baseline['word_list']['file']
 
     # If we have knowledge of an existing baseline file, we should use
     # that knowledge and add it to our exclude_files regex.
